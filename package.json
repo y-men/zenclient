@@ -3,25 +3,36 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prsima:gen": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "14.1.4"
+    "@prisma/client": "^5.17.0",
+    "@sinclair/typebox": "^0.32.25",
+    "bootstrap": "^5.3.3",
+    "next": "14.1.4",
+    "next-transpile-modules": "^10.0.1",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.10.4",
+    "react-data-grid": "^7.0.0-beta.43",
+    "react-dom": "^18.2.0",
+    "react-dropdown": "^1.11.0",
+    "react-select": "^5.8.0"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
-    "postcss": "^8",
-    "tailwindcss": "^3.3.0",
+    "autoprefixer": "^10.4.19",
     "eslint": "^8",
-    "eslint-config-next": "14.1.4"
+    "eslint-config-next": "14.1.4",
+    "postcss": "^8.4.38",
+    "prisma": "^5.17.0",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5"
   }
 }

@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Task {
+  id        Int       @id @default(autoincrement())
+  name      String
+  desc      String?
+  sprint    Sprint?   @relation(fields: [sprintId], references: [id])
+  sprintId  Int?
+  owner     Owner?    @relation(fields: [ownerId], references: [id])
+  ownerId   Int? // relation scalar field  (used in the `@relation` attribute above)
+  loe       Int?
+  startDate DateTime?
+  endDate   DateTime?
+  sequence  Float?
+}
+
+// model Constraint {
+//   id      Int     @id @default(autoincrement())
+//   project String?
+//   name    String
+//   value   Int
+// }
+
+model Constraint {
+  project String
+  name    String
+  value   Int
+
+  @@id([name, project])
+}
+
+model Sprint {
+  id    Int     @id @default(autoincrement())
+  name  String?
+  tasks Task[]
+}
+
+model Owner {
+  id    Int     @id @default(autoincrement())
+  name  String?
+  tasks Task[]
+}

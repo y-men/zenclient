@@ -1,0 +1,27 @@
+.container {
+    min-height: 100vh;
+    padding: 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+.title {
+    margin: 0;
+    line-height: 1.15;
+    box-sizing: border-box;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 124px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    height: 248px;
+    text-align: center;
+}
+.title:hover
+{
+    cursor: pointer;
+}
+

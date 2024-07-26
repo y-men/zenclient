@@ -1,33 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@100..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Joti+One&family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+* {
+    /* Google Fonts */
+    box-sizing: border-box;
+    font-family: "M PLUS 1 Code", sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+
+    /* More convinient color for the eyes */
+    color: #5a5a5a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+h1 {
+    font-weight: 500;
+    font-size: 32px;
+    text-align: center;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+h2,
+h3 {
+    font-weight: 500;
+}
+
+main {
+    align-items: flex-start;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+    .text-balance {
+        text-wrap: balance;
+    }
+}
+
+/* Button
+Here we can see the difference in taiwing and boot strap
+ */
+.btn {
+    @apply inline-block rounded p-2 bg-blue-200 self-start;
+}
+
+.op {
+    color: rgb(33, 210, 246);
+    cursor: pointer;
+    text-decoration: underline;
+    font-variant: small-caps;
+    font-weight: 500;
+}
+
+/*rounded p-2 bg-blue-200 self-start */
+
+.fake-link {
+    color: rgb(33, 210, 246);
+    cursor: pointer;
+    text-decoration: underline;
+    font-variant: small-caps;
+    font-weight: 500;
+}
+
+
+/* Override Bootstrap Link Styles with Higher Specificity */
+a,
+a:link,
+a:visited {
+    color: #5a5a5a !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+a:hover,
+a:focus,
+a:active {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.btn {
+    background-color: transparent !important;
+    color: RGB( 116,116,116) !important;
+    border-color: RGB( 196,196,196) !important;;
+    border-radius: 4px !important;
 }

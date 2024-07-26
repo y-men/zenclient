@@ -1,0 +1,20 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Joti+One&family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap');
+
+.jotiOne {
+    font-family: "Luckiest Guy", serif;
+    font-weight: 400;
+    font-size: 22px;
+    font-style: normal;
+  }
+
+.linkStyle {
+    color: rgb(153, 156, 156);
+    cursor: pointer;
+    text-decoration: none;
+    borderRight: "1px solid #ccc";
+    paddingRight: "20px"
+}
+
+
+  
