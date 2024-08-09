@@ -34,8 +34,9 @@ export function AddTaskSubmit( props: { text?: string ,pendingText?: string }) {
 }
 
 
-export const EditableGridActionButton = (params:any) => {
-    const id: number = params.data.id;
+export const EditableGridActionButton = (params:any,
+                                         onClick:{ add:Function, carryonver:Function  } | null ) => {
+    const id: number = params?.data?.id;
     const onDeleteButtonClick = () => {
         console.log(`onButtonClick ${id}`);
         deleteTask(id);
@@ -43,8 +44,10 @@ export const EditableGridActionButton = (params:any) => {
 
     // @ts-ignore
     function onAddButtonClick(event: MouseEvent<HTMLButtonElement>): void {
-        //throw new Error("Function not implemented.");
         console.log(`onAddButtonClick ${id}`);
+        //debugger;
+        // The row adding will be handled in the grid
+        params.onClick?.add(params)
     }
 
     // add row under the task for the same task

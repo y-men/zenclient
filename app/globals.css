@@ -1,14 +1,25 @@
 @import url("https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@100..700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");
+/*@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400&display=swap");*/
+/*@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");*/
 @import url("https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap");
+/*@import url("https://fonts.googleapis.com/css2?family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap");*/
+/*@import url("https://fonts.googleapis.com/css2?family=Joti+One&family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap");*/
 
-@import url("https://fonts.googleapis.com/css2?family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Joti+One&family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap");
-
+/* ----- tailwindcss v2.0.2 */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}
+.btn {
+    @apply inline-block rounded p-2 bg-blue-200 self-start;
+}
+
+/* ----- tailwindcss v2.0.2 */
 
 * {
     /* Google Fonts */
@@ -17,7 +28,7 @@
     font-size: 18px;
     font-weight: 400;
 
-    /* More convinient color for the eyes */
+    /* More convenient color for the eyes */
     color: #5a5a5a;
 }
 
@@ -36,18 +47,31 @@ main {
     align-items: flex-start;
 }
 
-@layer utilities {
-    .text-balance {
-        text-wrap: balance;
-    }
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Button
-Here we can see the difference in taiwing and boot strap
- */
-.btn {
-    @apply inline-block rounded p-2 bg-blue-200 self-start;
+.root-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+footer {
+    margin-top: auto;
+}
+
+
+
+
 
 .op {
     color: rgb(33, 210, 246);

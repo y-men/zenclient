@@ -12,12 +12,13 @@ export default async function Plan() {
     console.log(`activeSprintsFromDb: ${activeSprintsFromDb}`);
 
 
-    return <div>
-        <h1>Plan Page</h1>
-        <br/>
-        <EditableDataGrid rows={rows}
+    return <div >
+                <h1>Plan Page</h1>
+                <br/>
+                <EditableDataGrid rows={rows}
                           activeSprints={activeSprintsFromDb}
                           owners={owners}
+
         />
     </div>
 } // Path: src/app/constraints/page.tsx
