@@ -12,7 +12,7 @@ export default function HomeCarousel() {
             <Container fluid="md">
                 <Carousel variant="dark">
                     <Carousel.Item>
-                        <div className={classes.title} onClick={() => { router.push("/grid")}} >
+                        <div className={classes.title} onClick={() => { router.push("/plan")}} >
                             Plan!
                         </div>
                         <Carousel.Caption>

@@ -4,7 +4,9 @@ import {ITask} from "@/model/task";
 import {
     TaskRepository,
     SQLLiteTaskRepository,
-    SQLLiteSprintRepository, SQLLiteConstraintRepository,
+    SQLLiteSprintRepository,
+    SQLLiteConstraintRepository,
+    SQLLiteOwnerRepository
 } from "@/db";
 import {revalidatePath} from "next/cache";
 import {number} from "prop-types";
@@ -12,7 +14,22 @@ import {number} from "prop-types";
 const taskRepository: TaskRepository = new SQLLiteTaskRepository();
 const sprintRepository: SQLLiteSprintRepository = new SQLLiteSprintRepository();
 const constraintRepository: SQLLiteConstraintRepository = new SQLLiteConstraintRepository();
+const ownersRepository: SQLLiteOwnerRepository = new SQLLiteOwnerRepository();
 
+export async function retrieveOwners(): Promise<{ id: number; name: string }[]> {
+    console.log("====> Retrieving owners");
+    const owners = await ownersRepository.getAll();
+    return owners as { id: number; name: string }[];
+}
+
+export async function assignSprintToTask(taskId: number, sprintId: number): Promise<void> {
+    console.log(`====> Assigning task ${taskId} to sprint ${sprintId}`);
+
+    // Update the task with the sprint id
+    await (taskRepository as SQLLiteTaskRepository).assignSprint(taskId, sprintId);
+    revalidatePath("/grid");
+    redirect("/grid");
+}
 
 export async function retrieveConstraints(): Promise<{ name: string, value: number, project: string }[] | null> {
     const constraints = await constraintRepository.getAll();

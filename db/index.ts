@@ -3,17 +3,46 @@
 import { ITask, Task } from "../model/task";
 import { PrismaClient } from "@prisma/client";
 
-export interface TaskRepository {
-  getAll(): Promise<Task[] | null>;
-  getById(id: number): Promise<Task | null>;
-  create(task: Task): Promise<Task>;
-  update(task: Task): Promise<Task>;
-  delete(id: number): Promise<void>;
+
+//todo Add interfaces for repositories
+//todo Migrate the classes use the "abstract" Prisma repository
+/**
+ * A generic repository for Prisma
+ */
+abstract class PrismaRepository <T> {
+  entity = "";
+  prisma = new PrismaClient({ log: ["query", "error", "warn", "info"] });
+
+  constructor( entity:string) {
+    this.entity = entity;
+  }
+
+  async getAll(): Promise<T[] | null> {
+    // @ts-ignore
+    const items = await ( this.prisma[this.entity] as PrismaClient).findMany();
+    return items as any[];
+  }
+  async getById(id: number): Promise< T | null> {
+    // @ts-ignore
+    const owner = await ( this.prisma[this.entity ] as PrismaClient ).findUnique({
+      where: {
+        id: id,
+      },
+    });
+    return owner as T;
+  }
 }
 
-//todo Interface for SprintRepository
-// todo in
 
+// --- Owner Repository -----------------
+export class  SQLLiteOwnerRepository extends PrismaRepository<{ id: number; name: string }> {
+    constructor() {
+        super("owner");
+    }
+}
+
+
+// ----------------- Sprint Repository -----------------
 export class SQLLiteSprintRepository {
   constructor() {}
 
@@ -22,7 +51,19 @@ export class SQLLiteSprintRepository {
     const sprints = await this.prisma.sprint.findMany();
     return sprints as { id: number; name: string }[];
   }
+
+  async getById(id: number): Promise<{ id: number; name: string } | null> {
+    const sprint = await this.prisma.sprint.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    return sprint as { id: number; name: string };
+  }
+
 }
+
+// ----------------- Constraint Repository -----------------
 
 export  class SQLLiteConstraintRepository {
     constructor() {}
@@ -64,23 +105,35 @@ export  class SQLLiteConstraintRepository {
   }
 }
 
+// ----------------- Task Repository -----------------
+
+export interface TaskRepository {
+  getAll(): Promise<Task[] | null>;
+  getById(id: number): Promise<Task | null>;
+  create(task: Task): Promise<Task>;
+  update(task: Task): Promise<Task>;
+  delete(id: number): Promise<void>;
+}
 
 export class SQLLiteTaskRepository implements TaskRepository {
   prisma = new PrismaClient({ log: ["query", "error", "warn", "info"] });
   constructor() {
-    // Insert initial data for Sprint table
-    // const insertInitialData = async () => {
-    //   await this.prisma.sprint.createMany({
-    //     data: [
-    //       { name: "S1Q124", },
-    //       { name: "S2Q124",  },
-    //       { name: "S3Q124",  },
-    //     ],
-    //   });
-    // };
-    // insertInitialData();
   }
 
+
+  async assignSprint(taskId: number, sprintId: number): Promise<void> {
+    await this.prisma.task.update({
+      where: { id: taskId },
+      data: { sprintId: sprintId },
+    }).catch((e) => {
+
+      // Update with the sprintId=null
+      this.prisma.task.update({
+        where: { id: taskId },
+        data: { sprintId: null },
+      });
+    });
+  }
   // Initial data for Sprint table
 
   async getAll(): Promise<Task[] | null> {

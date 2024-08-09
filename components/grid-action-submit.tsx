@@ -33,25 +33,75 @@ export function AddTaskSubmit( props: { text?: string ,pendingText?: string }) {
   );
 }
 
-export function GridActionButton(taskId: any) {
+
+export const EditableGridActionButton = (params:any) => {
+    const id: number = params.data.id;
+    const onDeleteButtonClick = () => {
+        console.log(`onButtonClick ${id}`);
+        deleteTask(id);
+    };
+
+    // @ts-ignore
+    function onAddButtonClick(event: MouseEvent<HTMLButtonElement>): void {
+        //throw new Error("Function not implemented.");
+        console.log(`onAddButtonClick ${id}`);
+    }
+
+    // add row under the task for the same task
+    // @ts-ignore
+    function onCarryonverButtonClick(event: MouseEvent<HTMLButtonElement>): void {
+        //throw new Error("Function not implemented.");
+        console.log(`onCarryonverButtonClick ${id}`);
+    }
+
+    return (
+        // TODO Why is this not working?
+        <div
+            style={{
+                display: "flex",
+                alignItems: "left",
+                marginLeft: "0px",
+                marginRight: "2px",
+                marginTop: "2px",
+                marginBottom: "2px",
+                gap: "4px",
+                // Doesn't work
+                fontSize: "16px",
+            }}
+        >
+            <button onClick={onDeleteButtonClick} className="op">
+                delete
+            </button>
+            <button onClick={onAddButtonClick} className="op">
+                add
+            </button>
+            <button onClick={onCarryonverButtonClick} className="op">
+                carryover
+            </button>
+        </div>
+    );
+}
+
+
+export function GridActionButton(params: any) {
   const onDeleteButtonClick = () => {
     // TODO Why do we have object here ?
-    console.log(`onButtonClick ${taskId.taskId}`);
-    deleteTask(taskId.taskId);
+    console.log(`onButtonClick ${params.taskId}`);
+    deleteTask(params.taskId);
   };
 
   // Add row under the task with new task
   // @ts-ignore
     function onAddButtonClick(event: MouseEvent<HTMLButtonElement>): void {
     //throw new Error("Function not implemented.");
-    console.log(`onAddButtonClick ${taskId?.taskId}`);
+    console.log(`onAddButtonClick ${params?.taskId}`);
   }
 
   // add row under the task for the same task
   // @ts-ignore
     function onCarryonverButtonClick(event: MouseEvent<HTMLButtonElement>): void {
     //throw new Error("Function not implemented.");
-    console.log(`onCarryonverButtonClick ${taskId?.taskId}`);
+    console.log(`onCarryonverButtonClick ${params?.taskId}`);
   }
 
   return (

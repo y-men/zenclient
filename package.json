@@ -8,11 +8,13 @@
     "start": "next start",
     "lint": "next lint",
     "prsima:gen": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "db": "ts-node ./prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",
     "@sinclair/typebox": "^0.32.25",
+    "ag-grid-react": "^32.1.0",
     "bootstrap": "^5.3.3",
     "next": "14.1.4",
     "next-transpile-modules": "^10.0.1",
@@ -33,6 +35,7 @@
     "postcss": "^8.4.38",
     "prisma": "^5.17.0",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   }
 }

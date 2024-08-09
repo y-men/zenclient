@@ -17,8 +17,8 @@ export default function DropDownSelector({
   return (
     <Select
       options={options}
-      onChange={()=>{}}
-      value={options[0]}
+      onChange={onChange}
+      value={options.find((option: { value: any; }) => option.value === selected)}
       placeholder="Select an option"
     />
   );

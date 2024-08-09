@@ -58,36 +58,49 @@ const EffortPage = () => {
 
                         <FormDataField name={"integrationPoints"}
                                        displayName={"Integration Points"}
+                            // @ts-ignore
                                        value={data.integrationPoints}
                                        desc={"Count the number of integration points required"}
                                        onChange={hadleValueChange}/>
                         <FormDataField name={"ktlo"}
+                            // @ts-ignore
+
                                        value={data.ktlo}
                                        displayName={"KTLO"}
                                        desc={"Keep The Lights On: Estimate the percentage of time allocated to maintenance tasks."}
                                        onChange={hadleValueChange}/>
                         <FormDataField name={"technicalDebt"}
                                        displayName={"Technical Debt"}
+                            // @ts-ignore
+
                                        value={data.technicalDebt}
                                        desc={"Estimate the level of technical debt on a scale of 1-5"}
                                        onChange={hadleValueChange}/>
                         <FormDataField name={"contingency"}
                                        displayName={"Contingency %"}
+                            // @ts-ignore
+
                                        value={data.contingency}
                                        desc={"This is a percentage buffer added to the estimated time to account for unforeseen issues or risks"}
                                        onChange={hadleValueChange}/>
                         <FormDataField name={"integrationPoints"}
                                        displayName={"Integration Points"}
+                            // @ts-ignore
+
                                        value={data.includeMood}
                                        desc={"The motivation and morale of the team members (1-5)"}
                                        onChange={hadleValueChange}/>
                         <FormDataField name={"activeSprintDays"}
-                                        displayName={"Active Sprint Days"}
+                                       displayName={"Active Sprint Days"}
+                            // @ts-ignore
+
                                        value={data.activeSprintDays}
                                        desc={"The number of days within a sprint that are actually available for productive work"}
                                        onChange={hadleValueChange}/>
                         <FormDataField name={"teamMembers"}
-                                        displayName={"Team Members"}
+                                       displayName={"Team Members"}
+                            // @ts-ignore
+
                                        value={data.teamMembers}
                                        desc={"This refers to the number of individuals assigned to work on a specific task or project. "}
                                        onChange={hadleValueChange}/>
