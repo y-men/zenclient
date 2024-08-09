@@ -45,15 +45,12 @@ export const EditableGridActionButton = (params:any,
     // @ts-ignore
     function onAddButtonClick(event: MouseEvent<HTMLButtonElement>): void {
         console.log(`onAddButtonClick ${id}`);
-        //debugger;
-        // The row adding will be handled in the grid
         params.onClick?.add(params)
     }
 
     // add row under the task for the same task
     // @ts-ignore
     function onCarryonverButtonClick(event: MouseEvent<HTMLButtonElement>): void {
-        //throw new Error("Function not implemented.");
         console.log(`onCarryonverButtonClick ${id}`);
     }
 
@@ -72,23 +69,24 @@ export const EditableGridActionButton = (params:any,
                 fontSize: "16px",
             }}
         >
-            <button onClick={onDeleteButtonClick} className="op">
+            <span onClick={onDeleteButtonClick} className="op">
                 delete
-            </button>
-            <button onClick={onAddButtonClick} className="op">
+            </span>
+            <span onClick={onAddButtonClick} className="op">
                 add
-            </button>
-            <button onClick={onCarryonverButtonClick} className="op">
+            </span>
+            <span onClick={onAddButtonClick} className="op">
                 carryover
-            </button>
+            </span>
+
         </div>
     );
 }
 
 
 export function GridActionButton(params: any) {
-  const onDeleteButtonClick = () => {
-    // TODO Why do we have object here ?
+    const onDeleteButtonClick = () => {
+        // TODO Why do we have object here ?
     console.log(`onButtonClick ${params.taskId}`);
     deleteTask(params.taskId);
   };

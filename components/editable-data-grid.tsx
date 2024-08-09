@@ -39,6 +39,9 @@ const EditableDataGrid = (
         {
             field: "actions",
             headerName: " ",
+            width: 150,
+            minWidth: 150,
+            resizable: false,
             cellRenderer: (params: any) => (
                 <EditableGridActionButton
                     onClick={{
@@ -82,7 +85,7 @@ const EditableDataGrid = (
     ];
 
     return (
-        <div className="ag-theme-quartz" style={{ height: 800, width: '100%' }}>
+        <div className="ag-theme-quartz" style={{ height: 600, width: '100%' }}>
             <AgGridReact
                 rowData={rowData} // Pass rowData directly as a prop
                 // @ts-ignore

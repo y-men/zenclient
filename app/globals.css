@@ -5,31 +5,22 @@
 /*@import url("https://fonts.googleapis.com/css2?family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap");*/
 /*@import url("https://fonts.googleapis.com/css2?family=Joti+One&family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap");*/
 
-/* ----- tailwindcss v2.0.2 */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-@layer utilities {
-    .text-balance {
-        text-wrap: balance;
-    }
-}
-.btn {
-    @apply inline-block rounded p-2 bg-blue-200 self-start;
-}
 
-/* ----- tailwindcss v2.0.2 */
-
+/* Global Styles */
 * {
-    /* Google Fonts */
     box-sizing: border-box;
     font-family: "M PLUS 1 Code", sans-serif;
     font-size: 18px;
     font-weight: 400;
+    color: #5a5a5a; /* More convenient color for the eyes */
+}
 
-    /* More convenient color for the eyes */
-    color: #5a5a5a;
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 h1 {
@@ -38,20 +29,12 @@ h1 {
     text-align: center;
 }
 
-h2,
-h3 {
+h2, h3 {
     font-weight: 500;
 }
 
 main {
     align-items: flex-start;
-}
-
-html, body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
 }
 
 .root-layout {
@@ -69,48 +52,38 @@ footer {
     margin-top: auto;
 }
 
+/* Utility Classes */
+.text-balance {
+    text-wrap: balance;
+}
 
-
-
-
-.op {
+.op, .fake-link {
     color: rgb(33, 210, 246);
     cursor: pointer;
     text-decoration: underline;
     font-variant: small-caps;
     font-weight: 500;
 }
-
-/*rounded p-2 bg-blue-200 self-start */
-
-.fake-link {
-    color: rgb(33, 210, 246);
-    cursor: pointer;
-    text-decoration: underline;
-    font-variant: small-caps;
-    font-weight: 500;
-}
-
 
 /* Override Bootstrap Link Styles with Higher Specificity */
-a,
-a:link,
-a:visited {
+a, a:link, a:visited {
     color: #5a5a5a !important;
     text-decoration: none !important;
     cursor: pointer !important;
 }
 
-a:hover,
-a:focus,
-a:active {
+a:hover, a:focus, a:active {
     text-decoration: none !important;
     color: inherit !important;
 }
 
+/* Custom Button Styles */
 .btn {
+    display: inline-block;
+    padding: 0.5rem; /* Equivalent to Tailwind's p-2 */
     background-color: transparent !important;
-    color: RGB( 116,116,116) !important;
-    border-color: RGB( 196,196,196) !important;;
+    color: rgb(116, 116, 116) !important;
+    border-color: rgb(196, 196, 196) !important;
     border-radius: 4px !important;
+    align-self: flex-start;
 }
