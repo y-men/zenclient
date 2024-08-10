@@ -1,10 +1,15 @@
 "use client"
 import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
+import { ClientSideRowModelModule } from 'ag-grid-community';
+
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css";// Optional Theme applied to the Data Grid
 import { useState } from "react";
 import { EditableGridActionButton } from "@/components/grid-action-submit";
 import { Task } from "@/model/task";
+import {createOrUpdateExistingTask, deleteTask, retrieveTasks} from "@/actions";
+import {revalidatePath} from "next/cache";
+import {redirect} from "next/navigation";
 
 const EditableDataGrid = (
     { rows, activeSprints, owners }: { rows: any[] | null, activeSprints?: { id: number; name: string }[], owners?: { id: number; name: string }[] },
@@ -18,23 +23,35 @@ const EditableDataGrid = (
     console.log("Active sprints", activeSprints);
     console.log("Owners", owners);
 
+
+    // --- Grid operations -----------------
     function handleAddRowAtAfterIndex(params: any) {
         console.log("Adding row after index", params.rowIndex);
         const newRow: Task = {
-            id: 0,
             name: "",
             desc: "",
-            sprintId: 0,
-            ownerId: 0,
+            // sprintId: 0,
+            // ownerId: 0,
             loe: 0,
             startDate: params.data?.endDate,
-            endDate: new Date()
+            endDate: new Date(),
+            id: ''
         };
         const updatedRows = [...rowData!];
         updatedRows.splice(params.node.rowIndex + 1, 0, newRow); // Insert the new row after the selected row
         setRowData(updatedRows);
     }
 
+    const handleDeleteRow = async (params: any) => {
+        console.log("Deleting row", params);
+        await  deleteTask(params.data.id);
+        const updatedRows = [...rowData!];
+        updatedRows.splice(params.node.rowIndex, 1); // Remove the row
+        setRowData(updatedRows);
+        //TODO Another option is to re-fetch the data from the server
+    }
+
+    // --- Grid configuration -----------------
     const columnDefs = [
         {
             field: "actions",
@@ -46,50 +63,69 @@ const EditableDataGrid = (
                 <EditableGridActionButton
                     onClick={{
                         add: () => handleAddRowAtAfterIndex(params),
-                        carryonver: (params: any) => console.log("Carryover")
+                        carryonver: (params: any) => console.log("Carryover"),
+                        delete: () => handleDeleteRow(params)
                     }}
                     {...params}
                 />
             )
         },
         { field: "id", name: "ID" },
-        { field: "name", name: "Title" },
+        {
+            field: "name",
+            name: "Title",
+            editable: true,
+            cellEditor: "agTextCellEditor",
+        },
         {
             field: "sprintId",
             name: "Sprint",
             editable: true,
-            cellRenderer: "agSelectCellRenderer",
             cellEditor: "agSelectCellEditor",
             cellEditorParams: {
-                values: activeSprints!.map((sprint: { id: number; name: string }) => sprint.name)
+                values: activeSprints.map(sprint => sprint.id)
             },
-            valueParser: (params: any) => activeSprints.find((sprint) => sprint.name === params.newValue)?.id,
-            valueFormatter: (params: any) => activeSprints.find((sprint) => Number(sprint.id) === Number(params.value))?.name
+            valueFormatter: (params: any) => {
+                const selectedSprint = activeSprints.find((sprint) => Number(sprint.id) === Number(params.value));
+                return selectedSprint?.name
+            }
         },
-        { field: "desc", name: "Description" },
+        {
+            field: "desc",
+            name: "Description",
+            editable: true,
+            cellEditor: "agTextCellEditor",
+
+        },
         {
             field: "ownerId",
             name: "Owner",
             editable: true,
-            cellRenderer: "agSelectCellRenderer",
+            // cellRenderer: "agSelectCellRenderer",
             cellEditor: "agSelectCellEditor",
             cellEditorParams: {
-                values: owners!.map((owner: { id: number; name: string }) => owner.name)
+                values: owners!.map((owner: { id: number; name: string }) => owner.id)
             },
-            valueParser: (params: any) => owners!.find((owner) => owner.name === params.newValue)?.id,
             valueFormatter: (params: any) => owners!.find((owner) => Number(owner.id) === Number(params.value))?.name
         },
-        { field: "loe", name: "LOE" },
+        {
+            field: "loe",
+            name: "LOE",
+            editable: true,
+            cellEditor: "agNumberCellEditor",
+        },
         { field: "startDate", name: "Start Date" },
-        { field: "endDate", name: "End Date" },
+        {   field: "endDate",
+            name: "End Date"
+        },
     ];
 
     return (
         <div className="ag-theme-quartz" style={{ height: 600, width: '100%' }}>
             <AgGridReact
-                rowData={rowData} // Pass rowData directly as a prop
+                rowData={rowData}
                 // @ts-ignore
-                columnDefs={columnDefs} // Pass column definitions as a prop
+                columnDefs={columnDefs}
                 defaultColDef={{
                     flex: 1,
                     minWidth: 100,
@@ -99,6 +135,24 @@ const EditableDataGrid = (
                 }}
                 singleClickEdit={true}
                 rowSelection="single"
+                onCellEditingStopped={async (params: any) => {
+                    const updatedTask: Task = params.data;
+                    const createdTask = await createOrUpdateExistingTask(updatedTask);  // Await the operation
+                    const updatedRows = await retrieveTasks();
+                    setRowData(updatedRows);
+
+                }}
+                onCellKeyDown={async (params: any) => {
+                    console.log("Cell key down", params);
+                    if (params.event.key === 'Enter') {
+                       // params.api.stopEditing();
+                       //  const updatedTask: Task = params.data;
+                       //  const createdTask = await createTaskInLine(updatedTask);  // Await the operation
+                       //  const updatedRows = await retrieveTasks();
+                       //  setRowData(updatedRows);
+                    }
+                }}
+
                 onGridReady={(params: any) => {
                     params.api.sizeColumnsToFit();
                 }}

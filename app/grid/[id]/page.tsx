@@ -9,7 +9,7 @@ export type TaskParams = {
 };
 
 export default async function ViewTaskData(props: TaskParams) {
-  const task: { id: number, name:string, desc?:string   } | null =
+  const task: { id: string, name:string, desc?:string   } | null =
     await findById( parseInt(props.params.id) );
    
   if (!task) return notFound();

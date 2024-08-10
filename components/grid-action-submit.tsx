@@ -35,27 +35,24 @@ export function AddTaskSubmit( props: { text?: string ,pendingText?: string }) {
 
 
 export const EditableGridActionButton = (params:any,
-                                         onClick:{ add:Function, carryonver:Function  } | null ) => {
-    const id: number = params?.data?.id;
-    const onDeleteButtonClick = () => {
-        console.log(`onButtonClick ${id}`);
-        deleteTask(id);
-    };
+                                         onClick:{ add:Function, carryonver:Function, delete:Function  } | null ) => {
+    const id: string = params?.data?.id;
+    const onDeleteButtonClick = () => params.onClick?.delete(params)
+    const onAddButtonClick = () => params.onClick?.add(params)
+    const onCarryonverButtonClick = () => params.onClick?.carryonver(params)
 
     // @ts-ignore
-    function onAddButtonClick(event: MouseEvent<HTMLButtonElement>): void {
-        console.log(`onAddButtonClick ${id}`);
-        params.onClick?.add(params)
-    }
-
-    // add row under the task for the same task
-    // @ts-ignore
-    function onCarryonverButtonClick(event: MouseEvent<HTMLButtonElement>): void {
-        console.log(`onCarryonverButtonClick ${id}`);
-    }
+    // function onAddButtonClick(event: MouseEvent<HTMLButtonElement>): void {
+    //     params.onClick?.add(params)
+    // }
+    //
+    // // add row under the task for the same task
+    // // @ts-ignore
+    // function onCarryonverButtonClick(event: MouseEvent<HTMLButtonElement>): void {
+    //     console.log(`onCarryonverButtonClick ${id}`);
+    // }
 
     return (
-        // TODO Why is this not working?
         <div
             style={{
                 display: "flex",
@@ -65,8 +62,6 @@ export const EditableGridActionButton = (params:any,
                 marginTop: "2px",
                 marginBottom: "2px",
                 gap: "4px",
-                // Doesn't work
-                fontSize: "16px",
             }}
         >
             <span onClick={onDeleteButtonClick} className="op">

@@ -14,25 +14,18 @@ generator client {
 }
 
 model Task {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(uuid())
   name      String
   desc      String?
   sprint    Sprint?   @relation(fields: [sprintId], references: [id])
-  sprintId  Int?
+  sprintId  String?
   owner     Owner?    @relation(fields: [ownerId], references: [id])
-  ownerId   Int? // relation scalar field  (used in the `@relation` attribute above)
+  ownerId   String?
   loe       Int?
   startDate DateTime?
   endDate   DateTime?
   sequence  Float?
 }
-
-// model Constraint {
-//   id      Int     @id @default(autoincrement())
-//   project String?
-//   name    String
-//   value   Int
-// }
 
 model Constraint {
   project String
@@ -43,13 +36,13 @@ model Constraint {
 }
 
 model Sprint {
-  id    Int     @id @default(autoincrement())
+  id    String  @id @default(uuid())
   name  String?
   tasks Task[]
 }
 
 model Owner {
-  id    Int     @id @default(autoincrement())
+  id    String  @id @default(uuid())
   name  String?
   tasks Task[]
 }

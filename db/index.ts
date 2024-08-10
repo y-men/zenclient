@@ -47,18 +47,18 @@ export class SQLLiteSprintRepository {
   constructor() {}
 
   prisma = new PrismaClient({ log: ["query", "error", "warn", "info"] });
-  async getAll(): Promise<{ id: number; name: string }[] | null> {
+  async getAll(): Promise<{ id: string; name: string }[] | null> {
     const sprints = await this.prisma.sprint.findMany();
-    return sprints as { id: number; name: string }[];
+    return sprints as { id: string; name: string }[];
   }
 
-  async getById(id: number): Promise<{ id: number; name: string } | null> {
+  async getById(id: string): Promise<{ id: string; name: string } | null> {
     const sprint = await this.prisma.sprint.findUnique({
       where: {
         id: id,
       },
     });
-    return sprint as { id: number; name: string };
+    return sprint as { id: string; name: string };
   }
 
 }
@@ -109,10 +109,10 @@ export  class SQLLiteConstraintRepository {
 
 export interface TaskRepository {
   getAll(): Promise<Task[] | null>;
-  getById(id: number): Promise<Task | null>;
+  getById(id: string): Promise<Task | null>;
   create(task: Task): Promise<Task>;
   update(task: Task): Promise<Task>;
-  delete(id: number): Promise<void>;
+  delete(id: string): Promise<void>;
 }
 
 export class SQLLiteTaskRepository implements TaskRepository {
@@ -121,7 +121,7 @@ export class SQLLiteTaskRepository implements TaskRepository {
   }
 
 
-  async assignSprint(taskId: number, sprintId: number): Promise<void> {
+  async assignSprint(taskId: string, sprintId: string): Promise<void> {
     await this.prisma.task.update({
       where: { id: taskId },
       data: { sprintId: sprintId },
@@ -138,6 +138,7 @@ export class SQLLiteTaskRepository implements TaskRepository {
 
   async getAll(): Promise<Task[] | null> {
     const tasks = await this.prisma.task.findMany();
+    // @ts-ignore
     return tasks as Task[];
   }
 
@@ -148,39 +149,60 @@ export class SQLLiteTaskRepository implements TaskRepository {
         endDate: 'desc',
       },
     });
+    // @ts-ignore
     return task as Task;
+  }
+
+  // Extend somewhat on the "classic" upsert method
+  async upsert(task: Task): Promise<Task> {
+    console.log(`### upsert: ${task}, ${task.name}, ${task.desc}, ${task.loe} t.id: ${task.id} , t.sprintId: ${task.sprintId} , t.ownerId: ${task.ownerId}`);
+    let t: Task;
+    if (task.id && task.id != '') {
+      t = await this.prisma.task.update({
+        where: {id: task.id},
+        data: task,
+      });
+    } else {
+      t = await this.prisma.task.create({
+        data: {
+          name: task.name,
+          desc: task.desc,
+          loe: task.loe,
+          sprintId: task.sprintId, //== '0'? null: task.sprintId,
+          ownerId: task.ownerId, //== '0'? null: task.ownerId,
+          startDate: task.startDate,
+          endDate: task.endDate,
+        },
+      });
+    }
+    // @ts-ignore
+    return t;
   }
 
   async create(task: Task): Promise<Task> {
     const t  = await this.prisma.task.create({
       data: { name: task.name, desc: task.desc, loe: task.loe, startDate: task.startDate, endDate: task.endDate },
     });
+
+    // @ts-ignore
     return t as Task;
   }
 
-  async getById(id: number): Promise<Task | null> {
+  async getById(id: string): Promise<Task | null> {
     const task = await this.prisma.task.findUnique({
       where: {
         id: id,
       },
     });
+    // @ts-ignore
     return task as Task;
   }
 
-  // async findTaskById(id: number): Promise<Task | null> {
-  //   const task = await this.prisma.task.findUnique({
-  //     where: {
-  //       id: id,
-  //     },
-  //   });
-  //   return task as Task;
-  // }
-  //
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.prisma.task.delete({
       where: {
-        id: id as number,
+        id: id
       },
     });
   }
@@ -188,6 +210,7 @@ export class SQLLiteTaskRepository implements TaskRepository {
   async update(task: Task): Promise<Task> {
     const t = await this.prisma.task.update({
       where: { id: task.id },
+      // @ts-ignore
       data: task,
     });
     return t as Task;
