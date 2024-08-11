@@ -12,7 +12,7 @@ import {revalidatePath} from "next/cache";
 import {redirect} from "next/navigation";
 
 const EditableDataGrid = (
-    { rows, activeSprints, owners }: { rows: any[] | null, activeSprints?: { id: number; name: string }[], owners?: { id: number; name: string }[] },
+    { rows, activeSprints, owners }: { rows: any[] | null, activeSprints?: { id: string; name: string }[], owners?: { id: string; name: string }[] },
 ) => {
 
     const [rowData, setRowData] = useState(rows);
@@ -25,18 +25,19 @@ const EditableDataGrid = (
 
 
     // --- Grid operations -----------------
-    function handleAddRowAtAfterIndex(params: any) {
+    const handleAddRowAtAfterIndex = async (params: any) => {
         console.log("Adding row after index", params.rowIndex);
-        const newRow: Task = {
+        const newRow =  {
             name: "",
             desc: "",
             // sprintId: 0,
-            // ownerId: 0,
+            ownerId: params.data?.ownerId ?? 0,
             loe: 0,
             startDate: params.data?.endDate,
             endDate: new Date(),
             id: ''
         };
+        //await createOrUpdateExistingTask(newRow);
         const updatedRows = [...rowData!];
         updatedRows.splice(params.node.rowIndex + 1, 0, newRow); // Insert the new row after the selected row
         setRowData(updatedRows);
@@ -104,7 +105,8 @@ const EditableDataGrid = (
             // cellRenderer: "agSelectCellRenderer",
             cellEditor: "agSelectCellEditor",
             cellEditorParams: {
-                values: owners!.map((owner: { id: number; name: string }) => owner.id)
+                // Make sure the values are sorted so that N/A is always the first option
+                values: owners!.map((owner  ) => owner.id).sort((a, b) =>  Number(a) - Number(b))
             },
             valueFormatter: (params: any) => owners!.find((owner) => Number(owner.id) === Number(params.value))?.name
         },
@@ -121,7 +123,7 @@ const EditableDataGrid = (
     ];
 
     return (
-        <div className="ag-theme-quartz" style={{ height: 600, width: '100%' }}>
+        <div className="ag-theme-quartz" style={{ height: '100%', width: '100%' }}>
             <AgGridReact
                 rowData={rowData}
                 // @ts-ignore
@@ -135,26 +137,26 @@ const EditableDataGrid = (
                 }}
                 singleClickEdit={true}
                 rowSelection="single"
-                onCellEditingStopped={async (params: any) => {
+                editType={"fullRow"}
+                onRowValueChanged={async (params: any) => {
                     const updatedTask: Task = params.data;
-                    const createdTask = await createOrUpdateExistingTask(updatedTask);  // Await the operation
+                    const createdTask = await createOrUpdateExistingTask(updatedTask);
                     const updatedRows = await retrieveTasks();
                     setRowData(updatedRows);
-
-                }}
-                onCellKeyDown={async (params: any) => {
-                    console.log("Cell key down", params);
-                    if (params.event.key === 'Enter') {
-                       // params.api.stopEditing();
-                       //  const updatedTask: Task = params.data;
-                       //  const createdTask = await createTaskInLine(updatedTask);  // Await the operation
-                       //  const updatedRows = await retrieveTasks();
-                       //  setRowData(updatedRows);
-                    }
                 }}
 
+
+                // Grid initialization
                 onGridReady={(params: any) => {
                     params.api.sizeColumnsToFit();
+                    params.api.applyColumnState({
+                        state: [
+                            { colId: "ownerId", sort: "asc" },
+                            { colId: "startDate", sort: "asc" },
+                        ],
+                        defaultState: { sort: null },
+
+                    });
                 }}
             />
         </div>

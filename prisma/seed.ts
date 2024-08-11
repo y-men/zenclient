@@ -13,7 +13,7 @@ const seed = async () => {
   if (!sprint) {
     await prisma.sprint.createMany({
       data: [
-        {name: "BKLG"},
+        {name: "BKLG"}, //backlog
         {name: "S1Q1"},
         {name: "S2Q1"},
         {name: "S3Q1"},
@@ -25,6 +25,7 @@ const seed = async () => {
     if (!owner) {
         await prisma.owner.createMany({
         data: [
+            {name: "N/A"}, // unassigned
             {name: "Thor"},
             {name: "Fandral"},
             {name: "Hogun"},

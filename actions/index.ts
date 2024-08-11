@@ -1,7 +1,7 @@
 
 "use server";
-import {redirect} from "next/navigation";
-import {ITask, Task} from "@/model/task";
+import {redirect, usePathname} from "next/navigation";
+import { Task} from "@/model/task";
 import {
     TaskRepository,
     SQLLiteTaskRepository,
@@ -18,10 +18,13 @@ const sprintRepository: SQLLiteSprintRepository = new SQLLiteSprintRepository();
 const constraintRepository: SQLLiteConstraintRepository = new SQLLiteConstraintRepository();
 const ownersRepository: SQLLiteOwnerRepository = new SQLLiteOwnerRepository();
 
-export async function retrieveOwners(): Promise<{ id: number; name: string }[]> {
+
+
+// -- Task operations -----------------
+export async function retrieveOwners(): Promise<{ id: string; name: string }[]> {
     console.log("====> Retrieving owners");
     const owners = await ownersRepository.getAll();
-    return owners as { id: number; name: string }[];
+    return owners as { id: string; name: string }[];
 }
 
 export async function assignSprintToTask(taskId: string, sprintId: string): Promise<void> {

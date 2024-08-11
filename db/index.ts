@@ -1,6 +1,6 @@
 // repositories/ITaskRepository.ts
 
-import { ITask, Task } from "../model/task";
+import { Task } from "../model/task";
 import { PrismaClient } from "@prisma/client";
 
 
@@ -35,7 +35,7 @@ abstract class PrismaRepository <T> {
 
 
 // --- Owner Repository -----------------
-export class  SQLLiteOwnerRepository extends PrismaRepository<{ id: number; name: string }> {
+export class  SQLLiteOwnerRepository extends PrismaRepository<{ id: string; name: string }> {
     constructor() {
         super("owner");
     }
