@@ -10,14 +10,19 @@ import { Task } from "@/model/task";
 import {createOrUpdateExistingTask, deleteTask, retrieveTasks} from "@/actions";
 import {revalidatePath} from "next/cache";
 import {redirect} from "next/navigation";
+import {useGlobalStore} from "@/store/global-store";
 
 const EditableDataGrid = (
-    { rows, activeSprints, owners }: { rows: any[] | null, activeSprints?: { id: string; name: string }[], owners?: { id: string; name: string }[] },
+//     { rows, activeSprints, owners }: { rows: any[] | null, activeSprints?: { id: string; name: string }[], owners?: { id: string; name: string }[] },
+// ) => {
+    { rows }: { rows: any[] | null },
 ) => {
 
+    const activeSprints = useGlobalStore(state => state.sprints);
+    const owners = useGlobalStore(state => state.owners);
     const [rowData, setRowData] = useState(rows);
-    activeSprints = activeSprints ? activeSprints : [];
-    owners = owners ? owners : [];
+    // activeSprints = activeSprints ? activeSprints : [];
+    // owners = owners ? owners : [];
     console.log("----------------------------------------------");
     console.log("Rows", rows);
     console.log("Active sprints", activeSprints);

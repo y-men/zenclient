@@ -2,19 +2,23 @@
 "use client";
 export default function FormDataField(props: { name:string, displayName?:string, value:number, desc?:string ,  onChange: (e: any) => void }) {
 
-    return <div className="flex flex-col mb-4">
-        <div className="flex items-center">
-            <div className="w-1/2 text-left">
-                <label>{props.displayName || props.name }:</label>
+    return (
+        <div className="mb-2">
+            <div className="d-flex align-items-center">
+                <div className="text-left me-2" style={{width: '30%'}}>
+                    <label>{props.displayName || props.name}:</label>
+                </div>
+                <div style={{ width: '70%' }}>
+
+                <input
+                    type="number"
+                    name={props.name}
+                    value={props.value}
+                    onChange={props.onChange}
+                    className="form-control w-25"
+                />
+                </div>
             </div>
-            <input
-                type="number"
-                name={props.name}
-                value={props.value}
-                onChange={props.onChange}
-                className="border rounded p-2 w-1/6"
-            />
         </div>
-        {props.desc && <small style={{fontStyle: "italic", display: "block"}}>{props.desc}</small>}
-    </div>
+    )
 }

@@ -3,6 +3,9 @@ import classes from "./header.module.css";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 
+//todo Add fous routes as a global configuration react context or zustand store
+
+// Focus meaning the navigation is not shown
 const focusRoutes = ["/focus", "/"];
 
 
