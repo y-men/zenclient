@@ -6,7 +6,7 @@ import {usePathname} from "next/navigation";
 //todo Add fous routes as a global configuration react context or zustand store
 
 // Focus meaning the navigation is not shown
-const focusRoutes = ["/focus", "/"];
+const focusRoutes = ["/focus", "/", "/coffee"];
 
 
 export default function Header() {
@@ -37,11 +37,16 @@ export default function Header() {
                 <Link href="/constraints">Constraints</Link>
               </span>
                 <span style={{borderRight: "1px solid #ccc", paddingRight: "20px"}}>
-                <Link href="/grid">Grid</Link>
+                <Link href="/sprint">Sprint</Link>
               </span>
-                <span>
+                <span style={{borderRight: "1px solid #ccc", paddingRight: "20px"}}>
+
                 <Link href="/plan">Plan</Link>
               </span>
+                <span>
+                <Link href="/gantt">Gantt</Link>
+              </span>
+
                 {/* This will align ZenGrid to the far right */}
                 <span className={classes.jotiOne} style={{marginLeft: "auto"}}>
                 ZenGrid

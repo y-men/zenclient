@@ -79,11 +79,19 @@ export async function retrieveTasks(): Promise<Task[] | null> {
     return tasks;
 }
 
+// -- Sprint operations -----------------
+
 export async function retrieveActiveSprints(): Promise<{ id: string; name: string }[]> {
     const sprints = await sprintRepository.getAll();
     return sprints as { id: string; name: string }[];
 }
 
+export async function retriveAllSprintDataById(sprintId: string): Promise<{ id: string; name: string } | null> {
+    const sprint = await sprintRepository.getById(sprintId);
+    return sprint as { id: string; name: string };
+}
+
+// -- Task operations -----------------
 
 export async function createOrUpdateExistingTask(t: Task) : Promise<Task> {
     console.log(`###createOrUpdateExistingTask: ${t}"`);

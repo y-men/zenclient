@@ -7,13 +7,7 @@ import DataGrid from "@/components/data-grid";
 import DropDownSelector from "@/components/drop-down-selector";
 
 export default async function Grid() {
-    // Get the data from the server
     const rows = await retrieveTasks();
-    // const activeSprintsFromDb = await retrieveActiveSprints();
-    // const activeSprints = activeSprintsFromDb.map((sprint: any) => ({
-    //     value: sprint.id,
-    //     label: sprint.name,
-    // }));
 
 // Use Context to save the data for the rowa and activeSprints
 
@@ -30,9 +24,6 @@ export default async function Grid() {
                 <DataGrid rows={rows}/>
             </div>
 
-            {/*<div style={{paddingTop: 20}}>*/}
-            {/*    <DropDownSelector options={activeSprints}/>*/}
-            {/*</div>*/}
         </div>
     );
 } // Path: src/app/plan/page.tsx

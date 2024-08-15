@@ -22,7 +22,9 @@ export default function HomeCarousel() {
                     </Carousel.Item>
 
                     <Carousel.Item>
-                        <div className={classes.title}>
+                        <div className={classes.title} onClick={() => {
+                            router.push("/sprint")
+                        }}>
                             Act!
                         </div>
                         <Carousel.Caption>

@@ -2,8 +2,8 @@
 import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
 import { ClientSideRowModelModule } from 'ag-grid-community';
 
-import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
-import "ag-grid-community/styles/ag-theme-quartz.css";// Optional Theme applied to the Data Grid
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
 import { EditableGridActionButton } from "@/components/grid-action-submit";
 import { Task } from "@/model/task";
@@ -13,8 +13,6 @@ import {redirect} from "next/navigation";
 import {useGlobalStore} from "@/store/global-store";
 
 const EditableDataGrid = (
-//     { rows, activeSprints, owners }: { rows: any[] | null, activeSprints?: { id: string; name: string }[], owners?: { id: string; name: string }[] },
-// ) => {
     { rows }: { rows: any[] | null },
 ) => {
 
