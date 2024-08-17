@@ -1,37 +1,45 @@
 "use client";
 
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {AgGridReact} from 'ag-grid-react';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import {Row} from "jackspeak";
+import {useGlobalStore} from "@/store/global-store";
 
 
 interface RowData {
-    deduction: string;
-
+    subject: string;
     [key: string]: number | string; // Allows dynamic keys for owners with numeric values
 }
 
-const MatrixGrid = () => {
-    const owners = ['Thor', 'Fandral', 'Hogun', 'Volstagg', 'Sif'];
-    const deductions = ['vacations', 'KTLO', 'misc'];
+const MatrixGrid =
+    ({owners, subjects, totalUnits =10 }:{ owners?:string[], subjects: string [], totalUnits?:number } ) => {
+    // Fetch owners from global store if not provided
+    // TODO This does not work as expected sometimes users are not loaded
+    // const ownersFromDb = useGlobalStore(state => state.owners);
+    // owners = owners || ownersFromDb.map(owner => owner.name);
+    const ownersFromDb = useGlobalStore(state => state.owners);
+    owners = owners || ownersFromDb.map(owner => owner.name);
 
     // Create initial row data
+    // TODO Make sure this row repsent the sprint total days and marked 'Capacity' and 'Total' for the last row
     const createRowData = () => {
         const rowData: RowData [] = [];
-        deductions.forEach((deduction, index) => {
-            const row: RowData = {deduction};
+
+        subjects.forEach((subject, index) => {
+            const row: RowData = {subject};
             owners.forEach((owner) => {
-                row[owner] = index === 0 ? 10 : 0; // First row with constant 10, others 0
+                row[owner] = index === 0 ? totalUnits : 0;
             });
             rowData.push(row);
         });
 
         // Add a summary row
-        const summaryRow: RowData = {deduction: 'Summary'};
+        const summaryRow: RowData = {subject: 'Summary'};
+
         owners.forEach((owner) => {
-            summaryRow[owner] = 10; // Initially just reflecting the first row (10)
+            summaryRow[owner] = totalUnits;
         });
         rowData.push(summaryRow);
 
@@ -44,7 +52,7 @@ const MatrixGrid = () => {
         const cols = [
             {
                 headerName: 'Deduction',
-                field: 'deduction',
+                field: 'subject',
                 editable: false,
             },
         ];
@@ -63,17 +71,17 @@ const MatrixGrid = () => {
         return cols;
     }, []);
 
-    const onCellValueChanged = (params: { data: { deduction: string; }; }) => {
-        if (params.data.deduction === 'Summary') return;
+    const onCellValueChanged = (params: { data: { subject: string; }; }) => {
+        if (params.data.subject === 'Summary') return;
 
         const updatedData = rowData.map((row) => ({...row}));
         owners.forEach((owner) => {
             let sum = updatedData[0][owner]; // Start with the first row (constant 10)
-            for (let i = 1; i < deductions.length; i++) {
+            for (let i = 1; i < subjects.length; i++) {
                 // @ts-ignore
                 sum -= updatedData[i][owner];
             }
-            updatedData[deductions.length][owner] = sum; // Update the summary row
+            updatedData[subjects.length][owner] = sum; // Update the summary row
         });
         setRowData(updatedData);
     };

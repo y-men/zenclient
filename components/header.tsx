@@ -40,12 +40,19 @@ export default function Header() {
                 <Link href="/sprint">Sprint</Link>
               </span>
                 <span style={{borderRight: "1px solid #ccc", paddingRight: "20px"}}>
-
                 <Link href="/plan">Plan</Link>
               </span>
-                <span>
+                <span style={{borderRight: "1px solid #ccc", paddingRight: "20px"}}>
                 <Link href="/gantt">Gantt</Link>
               </span>
+                {/*Quarterly*/}
+                <span style={{borderRight: "1px solid #ccc", paddingRight: "20px"}}>
+                <Link href="/quarterly">Quarterly</Link>
+              </span>
+                <span>
+                <Link href="/hc">Allocations</Link>
+              </span>
+
 
                 {/* This will align ZenGrid to the far right */}
                 <span className={classes.jotiOne} style={{marginLeft: "auto"}}>
