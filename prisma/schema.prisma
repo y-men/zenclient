@@ -14,17 +14,26 @@ generator client {
 }
 
 model Task {
-  id        String    @id @default(uuid())
-  name      String
-  desc      String?
-  sprint    Sprint?   @relation(fields: [sprintId], references: [id])
-  sprintId  String?
-  owner     Owner?    @relation(fields: [ownerId], references: [id])
-  ownerId   String?
-  loe       Int?
-  startDate DateTime?
-  endDate   DateTime?
-  sequence  Float?
+  id               String    @id @default(uuid())
+  name             String
+  desc             String?
+  sprint           Sprint?   @relation(fields: [sprintId], references: [id])
+  sprintId         String?
+  owner            Owner?    @relation(fields: [ownerId], references: [id])
+  ownerId          String?
+  loe              Int?
+  startDate        DateTime?
+  endDate          DateTime?
+  sequence         Float?
+  status           Int?
+  actual           Int?
+  commited         Int?
+  carryover        String?
+  carryoverTaskId  String?
+  carryoverTask    Task?     @relation("CarryoverRelation", fields: [carryoverTaskId], references: [id])
+  carriedOverTasks Task[]    @relation("CarryoverRelation")
+  dependencies     Task[]    @relation("TaskDependency")
+  dependents       Task[]    @relation("TaskDependency")
 }
 
 model Constraint {
@@ -36,13 +45,25 @@ model Constraint {
 }
 
 model Sprint {
-  id    String  @id @default(uuid())
-  name  String?
-  tasks Task[]
+  id                     String                  @id @default(uuid())
+  name                   String?
+  tasks                  Task[]
+  sprintOwnerCommitments SprintOwnerCommitment[]
 }
 
 model Owner {
-  id    String  @id @default(uuid())
-  name  String?
-  tasks Task[]
+  id                     String                  @id @default(uuid())
+  name                   String?
+  tasks                  Task[]
+  sprintOwnerCommitments SprintOwnerCommitment[]
+}
+
+model SprintOwnerCommitment {
+  sprint   Sprint @relation(fields: [sprintId], references: [id])
+  sprintId String
+  owner    Owner  @relation(fields: [ownerId], references: [id])
+  ownerId  String
+  commited Int
+
+  @@id([sprintId, ownerId])
 }

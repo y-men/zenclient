@@ -2,7 +2,8 @@
 import { Type, type Static } from "@sinclair/typebox";
 
 //TODO Consider using export interface instead of export type
-// Review the benefots of this approach
+// Review the benefits of this approach
+// It is needded for API calls but not nessesary for the front end
 const TaskSchema = Type.Object({
   id: Type.String(),
   name: Type.String(),

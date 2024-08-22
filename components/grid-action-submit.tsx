@@ -5,6 +5,17 @@ import {useState} from "react";
 
 
 // @ts-ignore
+
+export const TextButton = ({ text, action  }) => {
+    return (
+        <button onClick={ action } className="btn btn-primary mb-2" >
+            {text}
+        </button>
+    );
+}
+
+
+// @ts-ignore
 export const EditButton = ({ onToggleEdit }) => {
     const [isEditable, setIsEditable] = useState(false);
 

@@ -141,6 +141,7 @@ const EditableDataGrid = (
                 singleClickEdit={true}
                 rowSelection="single"
                 editType={"fullRow"}
+                animateRows={false}
                 onRowValueChanged={async (params: any) => {
                     const updatedTask: Task = params.data;
                     const createdTask = await createOrUpdateExistingTask(updatedTask);

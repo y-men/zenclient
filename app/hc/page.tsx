@@ -15,7 +15,7 @@ export default async function HeadcountPage() {
             <h1>Headcount Page</h1>
             <br/>
             <HydrateGlobalStore>
-                <MatrixGrid subjects={themes} totalUnits={1}/>
+                <MatrixGrid subjects={themes} headerName={"Theme"} totalUnits={1}/>
             </HydrateGlobalStore>
         </div>
     )

@@ -36,6 +36,23 @@ export async function assignSprintToTask(taskId: string, sprintId: string): Prom
     redirect("/grid");
 }
 
+export async function findById(taskId: string): Promise<Task | null> {
+    const t: (Task | null) = await taskRepository.getById(taskId);
+    return t;
+}
+
+export async function deleteTask(taskId: string): Promise<void> {
+    await taskRepository.delete(taskId);
+    await revalidatePath("/plan");
+    redirect("/plan");
+}
+
+export async function retrieveTasks(): Promise<Task[] | null> {
+    const tasks = await taskRepository.getAll();
+    return tasks;
+}
+
+// --- Constraint operations -----------------
 export async function retrieveConstraints(): Promise<{ name: string, value: number, project: string }[] | null> {
     const constraints = await constraintRepository.getAll();
     return constraints;
@@ -63,21 +80,7 @@ export async function updateConstraintData(formData: FormData): Promise<void> {
     // todo Redirect or provide feedback after submission
 }
 
-export async function findById(taskId: string): Promise<Task | null> {
-    const t: (Task | null) = await taskRepository.getById(taskId);
-    return t;
-}
 
-export async function deleteTask(taskId: string): Promise<void> {
-    await taskRepository.delete(taskId);
-    await revalidatePath("/plan");
-    redirect("/plan");
-}
-
-export async function retrieveTasks(): Promise<Task[] | null> {
-    const tasks = await taskRepository.getAll();
-    return tasks;
-}
 
 // -- Sprint operations -----------------
 
@@ -89,6 +92,15 @@ export async function retrieveActiveSprints(): Promise<{ id: string; name: strin
 export async function retriveAllSprintDataById(sprintId: string): Promise<{ id: string; name: string } | null> {
     const sprint = await sprintRepository.getById(sprintId);
     return sprint as { id: string; name: string };
+}
+
+export async function createOrUpdateSprint(sprint: { id?: string; name: string }, data?:any): Promise<void> {
+
+    // Handle the constraints data
+
+    await sprintRepository.upsert(sprint);
+    revalidatePath("/sprints");
+    redirect("/sprints");
 }
 
 // -- Task operations -----------------

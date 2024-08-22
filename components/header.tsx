@@ -31,8 +31,12 @@ export default function Header() {
                 }}
             >
               <span style={{borderRight: "1px solid #ccc", paddingRight: "20px"}}>
-                <Link href="/">Home</Link>
+                <Link href="/">...</Link>
               </span>
+                <span style={{borderRight: "1px solid #ccc", paddingRight: "20px"}}>
+                <Link href="/home">Home</Link>
+              </span>
+
                 <span style={{borderRight: "1px solid #ccc", paddingRight: "20px"}}>
                 <Link href="/constraints">Constraints</Link>
               </span>

@@ -22,7 +22,7 @@ abstract class PrismaRepository <T> {
     const items = await ( this.prisma[this.entity] as PrismaClient).findMany();
     return items as any[];
   }
-  async getById(id: number): Promise< T | null> {
+  async getById(id: string): Promise< T | null> {
     // @ts-ignore
     const owner = await ( this.prisma[this.entity ] as PrismaClient ).findUnique({
       where: {
@@ -43,23 +43,40 @@ export class  SQLLiteOwnerRepository extends PrismaRepository<{ id: string; name
 
 
 // ----------------- Sprint Repository -----------------
-export class SQLLiteSprintRepository {
-  constructor() {}
-
-  prisma = new PrismaClient({ log: ["query", "error", "warn", "info"] });
-  async getAll(): Promise<{ id: string; name: string }[] | null> {
-    const sprints = await this.prisma.sprint.findMany();
-    return sprints as { id: string; name: string }[];
+export class SQLLiteSprintRepository extends PrismaRepository<{ id: string; name: string }> {
+  constructor() {
+    super("sprint");
   }
 
-  async getById(id: string): Promise<{ id: string; name: string } | null> {
-    const sprint = await this.prisma.sprint.findUnique({
-      where: {
-        id: id,
-      },
+  async create(sprint: { id: string; name: string }): Promise<{ id: string; name: string }> {
+    const s = await this.prisma.sprint.create({
+      data: sprint,
     });
-    return sprint as { id: string; name: string };
+    return s as { id: string; name: string };
   }
+  async upsert(sprint: { id?: string; name: string }): Promise<{ id: string; name: string }> {
+    const s = await this.prisma.sprint.upsert({
+      where: { id: sprint.id },
+      update: { name: sprint.name },
+      create: { name: sprint.name },
+    });
+    return s as { id: string; name: string };
+  }
+
+  // prisma = new PrismaClient({ log: ["query", "error", "warn", "info"] });
+  // async getAll(): Promise<{ id: string; name: string }[] | null> {
+  //   const sprints = await this.prisma.sprint.findMany();
+  //   return sprints as { id: string; name: string }[];
+  // }
+  //
+  // async getById(id: string): Promise<{ id: string; name: string } | null> {
+  //   const sprint = await this.prisma.sprint.findUnique({
+  //     where: {
+  //       id: id,
+  //     },
+  //   });
+  //   return sprint as { id: string; name: string };
+  // }
 
 }
 

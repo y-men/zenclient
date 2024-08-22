@@ -6,7 +6,7 @@ import "react-data-grid/lib/styles.css";
 import HomeCarousel from "@/components/home-carousel";
 
 
-export default function Home() {
+export default function Landing() {
   return (
     <div>
       <HomeCarousel/>
