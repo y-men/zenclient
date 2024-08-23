@@ -1,5 +1,5 @@
 import {HydrateGlobalStore} from "@/components/hydrate-store";
-import MatrixGrid from "@/components/matrix-grid";
+import MatrixFormGrid from "@/components/matrix-form-grid";
 
 
 export default async function HeadcountPage() {
@@ -13,10 +13,12 @@ export default async function HeadcountPage() {
     return (
         <div className="container-fluid d-flex flex-column" style={{height: '100%'}}>
             <h1>Headcount Page</h1>
-            <br/>
             <HydrateGlobalStore>
-                <MatrixGrid subjects={themes} headerName={"Theme"} totalUnits={1}/>
+                <MatrixFormGrid subjects={themes} headerName={"Theme"} totalUnits={1}/>
             </HydrateGlobalStore>
         </div>
+
+
+
     )
 } // Path: src/app/constraints/page.tsx

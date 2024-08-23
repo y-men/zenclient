@@ -62,23 +62,36 @@ export class SQLLiteSprintRepository extends PrismaRepository<{ id: string; name
     });
     return s as { id: string; name: string };
   }
-
-  // prisma = new PrismaClient({ log: ["query", "error", "warn", "info"] });
-  // async getAll(): Promise<{ id: string; name: string }[] | null> {
-  //   const sprints = await this.prisma.sprint.findMany();
-  //   return sprints as { id: string; name: string }[];
-  // }
-  //
-  // async getById(id: string): Promise<{ id: string; name: string } | null> {
-  //   const sprint = await this.prisma.sprint.findUnique({
-  //     where: {
-  //       id: id,
-  //     },
-  //   });
-  //   return sprint as { id: string; name: string };
-  // }
-
 }
+
+// ----------------- SprintOwnerCommitment Repository -----------------
+export class SQLLiteSprintOwnerCommitmentRepository extends PrismaRepository<{ id: string; sprintId: string; ownerId: string; units: number }> {
+    constructor() {
+        super("sprintOwnerCommitment");
+    }
+
+  async upsert(sprintOwnerCommitment: { sprintId: string; ownerId: string; commited: number }):
+      Promise<{ id: string; sprintId: string; ownerId: string; commited: number }> {
+    const s = await this.prisma.sprintOwnerCommitment.upsert({
+
+// Use unique composite key constraint
+      where: {
+        sprintId_ownerId: {
+          sprintId: sprintOwnerCommitment.sprintId,
+          ownerId: sprintOwnerCommitment.ownerId
+        }
+      },
+      update: {commited: sprintOwnerCommitment.commited},
+      create: {
+        sprintId: sprintOwnerCommitment.sprintId,
+        ownerId: sprintOwnerCommitment.ownerId,
+        commited: sprintOwnerCommitment.commited
+      },
+    });
+    return s as { id: string; sprintId: string; ownerId: string; commited: number };
+  }
+}
+
 
 // ----------------- Constraint Repository -----------------
 

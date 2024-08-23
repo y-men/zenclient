@@ -11,6 +11,12 @@ import Link from "next/link";
 export default async function Sprints() {
     const rows = await retrieveActiveSprints();
 
+    /*
+    INFO
+    Sprint are already defined by the quartely planning, so we can just display them here
+    The planner edits the next sprint in terms of capacity provded by the team and the visible constratins
+     */
+
     return (
         <div className="container-fluid d-flex flex-column" style={{height: '100%'}}>
             <h1>Sprints Page</h1>

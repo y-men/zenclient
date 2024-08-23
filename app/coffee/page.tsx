@@ -11,7 +11,7 @@ export default function Coffee() {
 
                     Coffee for the devs!
                 </h1>
-                <h5 style={{color: 'grey'}}>
+                <span style={{color: 'grey'}}>
                     Help us code faster... more coffee, more features.
                     <Link href="/coffee/buy" style={{
                         fontSize: 'inherit',
@@ -22,7 +22,7 @@ export default function Coffee() {
                         {` `}Buy us a coffee
                     </Link>
                     {` `}or visit our sponsors and become a part of our journey!
-                </h5>
+                </span>
             </div>
         </Focus>
     </div>
