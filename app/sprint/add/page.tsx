@@ -20,7 +20,7 @@ export default async function AddSprint() {
     return (
         <div className="container-fluid d-flex flex-column" style={{height: '100%'}}>
             <h1>Add Sprint Page</h1>
-            <MatrixFormGrid owners={owners} subjects={deductions} matrixFormAction={updateSprintData}/>
+            <MatrixFormGrid x={owners} y={deductions} matrixFormAction={updateSprintData}/>
         </div>
 
 

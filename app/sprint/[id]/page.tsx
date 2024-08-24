@@ -2,6 +2,7 @@ import {retriveAllSprintDataById} from "@/actions";
 import MatrixFormGrid from "@/components/matrix-form-grid";
 import {dlog} from "@/utils";
 import {SQLLiteSprintOwnerCommitmentRepository} from "@/db";
+import {HydrateGlobalStore} from "@/components/hydrate-store";
 
 
 export default async function EditSprint(props: { params: { id: string } }) {
@@ -20,7 +21,7 @@ export default async function EditSprint(props: { params: { id: string } }) {
         const s = data.filter( (row: any) => row.subject === 'Summary')
         console.log(`s: ${JSON.stringify(s)}`);
         Object.keys(s[0])
-            .filter((key) => key !== "subject")
+            .filter((key) => key !== "subject" && key !== "acc")
             .forEach((key: any) => {
                 console.log(`key: ${key} value: ${s[0][key]}`);
                 repository.upsert({ownerId: key, sprintId:props.params.id, commited: Number(s[0][key])})
@@ -33,7 +34,9 @@ export default async function EditSprint(props: { params: { id: string } }) {
         <div className="container-fluid d-flex flex-column" style={{height: '100%'}}>
             <h1>Edit Sprint</h1>
             <h3 className=" text-center mt-4">{name}</h3>
-            <MatrixFormGrid subjects={deductions} matrixFormAction={updateSprintData}/>
+            <HydrateGlobalStore>
+                <MatrixFormGrid y={deductions} matrixFormAction={updateSprintData}/>
+            </HydrateGlobalStore>
         </div>
     )
 }

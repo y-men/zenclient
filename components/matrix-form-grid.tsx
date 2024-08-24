@@ -1,10 +1,9 @@
 "use client";
 
-import React, {useState, useMemo, useEffect, useRef} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import {AgGridReact} from 'ag-grid-react';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import {Row} from "jackspeak";
 import {useGlobalStore} from "@/store/global-store";
 
 
@@ -15,43 +14,53 @@ interface RowData {
 }
 
 /**
- * Calculate data in the matrix including
- * @param owners
- * @param subjects
+ * A generic matrix utility that allows for the creation of a matrix form grid
+ * @param x
+ * @param y
  * @param headerName
  * @param totalUnits
- * @param onDataUpdate
+ * @param matrixFormAction
  * @constructor
  */
-const MatrixFormGrid = ({owners, subjects, headerName = "Deductions", totalUnits = 10, matrixFormAction = () => {}}
+const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10, matrixFormAction = () => {}}
                         : {
-    owners?: {id:string,name:string }  [],
-    subjects: string [],
+    x?: {id:string,name:string }  [],
+    y: string [],
     headerName?: string,
     totalUnits?: number,
     matrixFormAction?: Function
 }) => {
 
-    const ownersFromDb = useGlobalStore(state => state.owners);
-    owners = ownersFromDb;
-        //owners || ownersFromDb.map(owner => owner.name);
+    x = useGlobalStore(state => state.owners);
     const createRowData = () => {
         const rowData: RowData [] = [];
-        subjects.forEach((subject, index) => {
+        y.forEach((subject, index) => {
             const row: RowData = {subject};
-            owners.forEach((owner) => {
+            x.forEach((owner) => {
                 row[owner.id] = index === 0 ? totalUnits : 0;
+                // @ts-ignore
             });
             rowData.push(row);
         });
 
         // Add a summary row
         const summaryRow: RowData = {subject: 'Summary'};
-
-        owners.forEach((owner) => {
+        x.forEach((owner) => {
             summaryRow[owner.id] = totalUnits;
         });
         rowData.push(summaryRow);
+
+        //Add accamulted column
+        rowData.forEach((row) => {
+            let sum = 0;
+            x.forEach((owner) => {
+                // @ts-ignore
+                sum += row[owner.id];
+            });
+            row.acc = sum;
+        });
+
+
         return rowData;
     };
 
@@ -63,9 +72,14 @@ const MatrixFormGrid = ({owners, subjects, headerName = "Deductions", totalUnits
                 field: 'subject',
                 editable: false,
             },
+            {
+                headerName: 'Accumulated',
+                field: 'acc',
+                editable: false,
+            }
         ];
 
-        owners.forEach((owner) => {
+        x.forEach((owner) => {
             cols.push({
                 headerName: owner.name,
                 field: owner.id,
@@ -83,16 +97,6 @@ const MatrixFormGrid = ({owners, subjects, headerName = "Deductions", totalUnits
     const gridRef = useRef<AgGridReact>(null);
     const hiddenInputRef = useRef<HTMLInputElement>(null);
 
-    // const updateHiddenInput = (params : any) => {
-    //     if (gridRef.current && hiddenInputRef.current) {
-    //         const currentRowData: any[] = [];
-    //         gridRef.current.api.forEachNode((node: { data: any; }) => currentRowData.push(node.data));
-    //         debugger
-    //         hiddenInputRef.current.value = JSON.stringify(currentRowData);
-    //     }
-    //
-    // };
-
     const updateHiddenInput = () => {
         if (gridRef.current && hiddenInputRef.current) {
             const currentRowData: any[] = [];
@@ -102,19 +106,30 @@ const MatrixFormGrid = ({owners, subjects, headerName = "Deductions", totalUnits
     };
 
 
-
     const onCellValueChanged = (params: { data: { subject: string; }; }) => {
         if (params.data.subject === 'Summary') return;
-
         const updatedData = rowData.map((row) => ({...row}));
-        owners.forEach((owner) => {
+
+        // Calculate summary row (Y's)
+        x.forEach((owner) => {
             let sum = updatedData[0][owner.id];
-            for (let i = 1; i < subjects.length; i++) {
+            for (let i = 1; i < y.length; i++) {
                 // @ts-ignore
                 sum -= updatedData[i][owner.id];
             }
-            updatedData[subjects.length][owner.id] = sum; // Update the summary row
+            updatedData[y.length][owner.id] = sum; // Update the summary row
         });
+
+        // Calculate acc column (X's)
+        updatedData.forEach((row) => {
+            let sum = 0;
+            x.forEach((owner) => {
+                // @ts-ignore
+                sum += row[owner.id];
+            });
+            row.acc = sum;
+        });
+
         setRowData(updatedData);
         updateHiddenInput();
     };

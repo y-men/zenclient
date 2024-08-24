@@ -54,7 +54,7 @@ export default function Header() {
                 <Link href="/quarterly">Quarterly</Link>
               </span>
                 <span>
-                <Link href="/hc">Allocations</Link>
+                <Link href="/epic">Epics</Link>
               </span>
 
 
