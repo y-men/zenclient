@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Card, Spinner } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import classes from "./page.module.css";
+
 
 interface Item {
     id: number;
@@ -34,9 +36,37 @@ const Home: React.FC = () => {
         fetchMoreData();
     }, []); // Empty dependency array to run only once on mount
 
+    function getHomePageGreeting() {
+        let greeting = "Welcome";
+        const username = "[user]";
+        const currentHour = new Date().getHours();
+        if (currentHour >= 5 && currentHour < 12) {
+            greeting = "Good Morning";
+        } else if (currentHour >= 12 && currentHour < 18) {
+            greeting = "Good Afternoon";
+        } else if (currentHour >= 18 || currentHour < 5) {
+            greeting = "Good Evening";
+        }
+        return <>{greeting} {username}!</>;
+    }
+
     return (
         <Container className="mt-4">
-            <h1 className="mb-4">Home Page</h1>
+            {/*//TODO  Align the div to current container*/}
+            <div style={{
+                position: "absolute",
+                top: 80,
+                right: 20,
+                width: "300px",
+                height: "500px",
+                border: "1px solid lightgrey",
+                color: "lightgrey",
+            }}>
+                Atmosphere art acc to time
+            </div>
+            <div className="mb-4 text-center">
+                <span className={classes.jotiOneWelcome}>{getHomePageGreeting()}</span>
+            </div>
             <InfiniteScroll
                 dataLength={items.length}
                 next={fetchMoreData}

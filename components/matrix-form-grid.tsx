@@ -19,16 +19,21 @@ interface RowData {
  * @param y
  * @param headerName
  * @param totalUnits
- * @param matrixFormAction
+ * @param matrixFormAction - The action to be performed when the form is submitted , Should be a server side function
+ * @param addtionalActions
  * @constructor
  */
-const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10, matrixFormAction = () => {}}
+const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
+                            matrixFormAction = () => {},
+                            addtionalActions = []
+}
                         : {
     x?: {id:string,name:string }  [],
     y: string [],
     headerName?: string,
     totalUnits?: number,
     matrixFormAction?: Function
+    addtionalActions?: { name: string, action:Function } []
 }) => {
 
     x = useGlobalStore(state => state.owners);
@@ -134,8 +139,7 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10, matri
         updateHiddenInput();
     };
 
-
-
+    // @ts-ignore
     return (
         // @ts-ignore
         <form action={matrixFormAction}
@@ -148,9 +152,18 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10, matri
               }}
 
         >
-            <button className="btn btn-primary mb-2" type="submit">
-                Save
-            </button>
+            <div className="d-flex flex-row">
+                <button className="btn btn-primary mb-2" type="submit">
+                    Save
+                </button>
+                {addtionalActions.map((action) => (
+                    // @ts-ignore
+                    <button key={action.name} className="btn btn-primary mb-2 ms-2"
+                            onClick={() =>  action.action()}>
+                        {action.name}
+                    </button>
+                ))}
+            </div>
             <input
                 type="hidden"
                 name="sprintData"

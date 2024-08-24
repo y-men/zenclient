@@ -52,16 +52,6 @@ export const EditableGridActionButton = (params:any,
     const onAddButtonClick = () => params.onClick?.add(params)
     const onCarryonverButtonClick = () => params.onClick?.carryonver(params)
 
-    // @ts-ignore
-    // function onAddButtonClick(event: MouseEvent<HTMLButtonElement>): void {
-    //     params.onClick?.add(params)
-    // }
-    //
-    // // add row under the task for the same task
-    // // @ts-ignore
-    // function onCarryonverButtonClick(event: MouseEvent<HTMLButtonElement>): void {
-    //     console.log(`onCarryonverButtonClick ${id}`);
-    // }
 
     return (
         <div
