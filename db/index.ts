@@ -33,6 +33,35 @@ abstract class PrismaRepository <T> {
   }
 }
 
+// ------------------  Repository -----------------
+export class SQLLiteEpicRepository extends PrismaRepository<{
+  id: string;
+  name: string
+  shortDesc?: string
+  epicDesc?: string
+  priority?: number
+}> {
+    constructor() {
+        super("epic");
+    }
+    async create(epic: { id?: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number }): Promise<{ id: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number }> {
+        const e = await this.prisma.epic.create({
+            data: epic,
+        });
+        return e as { id: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number };
+    }
+
+    async upsert(epic: { id?: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number }): Promise<{ id: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number }> {
+        const e = await this.prisma.epic.upsert({
+            where: { id: epic.id },
+            update: { name: epic.name, shortDesc: epic.shortDesc, epicDesc: epic.epicDesc, priority: epic.priority },
+            create: { name: epic.name, shortDesc: epic.shortDesc, epicDesc: epic.epicDesc, priority: epic.priority },
+        });
+        return e as { id: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number };
+    }
+}
+
+
 
 // --- Owner Repository -----------------
 export class  SQLLiteOwnerRepository extends PrismaRepository<{ id: string; name: string }> {

@@ -5,7 +5,7 @@ export default function FormDataField(props: { name:string, displayName?:string,
     return (
         <div className="mb-2">
             <div className="d-flex align-items-center">
-                <div className="text-left me-2" style={{width: '30%'}}>
+                <div className="text-left me-2" style={{width: '25%'}}>
                     <label>{props.displayName || props.name}:</label>
                 </div>
                 <div style={{ width: '70%' }}>

@@ -29,18 +29,26 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
 }
                         : {
     x?: {id:string,name:string }  [],
-    y: string [],
+//y: string [],
+    y: {id:string,name:string }  [],
+
     headerName?: string,
     totalUnits?: number,
     matrixFormAction?: Function
     addtionalActions?: { name: string, action:Function } []
 }) => {
 
+    //Use global store to retrieve the epics if the y-axis is not provided
+
+
     x = useGlobalStore(state => state.owners);
+
+    // Alway add 'Total' to the y-axis
+    y = [{id:`totals`, name:`Total`}, ...y];
     const createRowData = () => {
         const rowData: RowData [] = [];
-        y.forEach((subject, index) => {
-            const row: RowData = {subject};
+        y.forEach((entry, index) => {
+            const row: RowData = {subject: entry.id};
             x.forEach((owner) => {
                 row[owner.id] = index === 0 ? totalUnits : 0;
                 // @ts-ignore
@@ -76,6 +84,11 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
                 headerName: headerName,
                 field: 'subject',
                 editable: false,
+                valueFormatter: (params: any) => {
+                    const selectedSprint = y.find((epic) => epic.id === params.value);
+                    return selectedSprint?.name
+                }
+
             },
             {
                 headerName: 'Accumulated',

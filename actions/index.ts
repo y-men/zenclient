@@ -7,21 +7,86 @@ import {
     SQLLiteTaskRepository,
     SQLLiteSprintRepository,
     SQLLiteConstraintRepository,
-    SQLLiteOwnerRepository
+    SQLLiteOwnerRepository, SQLLiteEpicRepository
 } from "@/db";
 import {revalidatePath} from "next/cache";
 import {number} from "prop-types";
 import {Log} from "@/model/decorators";
+import {dlog} from "@/utils";
 
 // Todo use injection
 const taskRepository: SQLLiteTaskRepository = new SQLLiteTaskRepository();
 const sprintRepository: SQLLiteSprintRepository = new SQLLiteSprintRepository();
 const constraintRepository: SQLLiteConstraintRepository = new SQLLiteConstraintRepository();
 const ownersRepository: SQLLiteOwnerRepository = new SQLLiteOwnerRepository();
+const epicRepository: SQLLiteEpicRepository = new SQLLiteEpicRepository();
+
+// TODO: refactor: Consider moving the form oprations to /app pages
+// TODO: refactor: Consider moving to /actions/forms ....
+// -- Form operations -----------------
+export async function addEpicFormAction(formData: FormData): Promise<void> {
+    dlog()
+    console.log(formData);
+    await epicRepository.create({
+        name: formData.get("name") as string,
+        shortDesc: formData.get("shortDescription") as string,
+        epicDesc: formData.get("epicDescription") as string,
+        priority: parseInt(formData.get("priority") as string) ?? 99
+    });
+    revalidatePath("/epic");
+    redirect("/epic");
+}
+
+/**
+ * Handle additional information nedded for calculation of constraints values
+ * @param formData
+ */
+export async function updateConstraintData(formData: FormData): Promise<void> {
+    let promises: Promise<{ name: string, value: number, project: string }>[] = [];
+    Array.from(formData.entries()).forEach(([key, value]) => {
+        console.log(`>> ${key}, ${value}  `);
+        const p: Promise<{ name: string; value: number; project: string }> =
+            constraintRepository.upsert({name: key, value: parseInt(value as string, 10), project: "ALL"})
+        promises.push(p);
+
+    })
+    Promise.allSettled(promises!).then(() => {
+        console.log("All constraints updated");
+    })
+
+    // todo Redirect or provide feedback after submission
+}
+
+/**
+ * Create a task with the given form data
+ * Update the sequence number of the task ( == id ) for creating with form
+ * Calculate the end date based on the start date and LOE
+ * @param formData
+ */
+export async function createTask(formData: FormData) {
+    const title = formData.get("title") as string;
+    const desc = formData.get("desc") as string;
+    const sloe = formData.get("loe") as string;
+    const loe = sloe ? parseInt(sloe, 10) : 0;
+    // @ts-ignore
+    await createOrUpdateTaskDbEntry({
+            name: formData.get("title") as string,
+            desc: formData.get("desc") as string,
+            loe: loe
+        }
+    );
+    revalidatePath("/plan");
+    redirect("/plan");
+}
 
 
-
-// -- Task operations -----------------
+// -- Retrieve operations -----------------
+export async function retrieveEpics(): Promise<{ id: string, name: string, shortDesc?: string, epicDesc?: string, priority?: number }[] | null> {
+    console.log("====> Retrieving epics");
+    const epics = await epicRepository.getAll();
+    console.dir(epics);
+    return epics;
+}
 export async function retrieveOwners(): Promise<{ id: string; name: string }[]> {
     console.log("====> Retrieving owners");
     const owners = await ownersRepository.getAll();
@@ -60,26 +125,7 @@ export async function retrieveConstraints(): Promise<{ name: string, value: numb
 
 }
 
-/**
- * Handle additional information nedded for calculation of constraints values
- * @param formData
- */
-export async function updateConstraintData(formData: FormData): Promise<void> {
-    let promises: Promise<{ name: string, value: number, project: string }>[] = [];
-    Array.from(formData.entries()).forEach(([key, value]) => {
-        console.log(`>> ${key}, ${value}  `);
-        const p: Promise<{ name: string; value: number; project: string }> =
-            constraintRepository.upsert({name: key, value: parseInt(value as string, 10), project: "ALL"})
-        promises.push(p);
 
-    })
-    Promise.allSettled(promises!).then(() => {
-        console.log("All constraints updated");
-    })
-
-
-    // todo Redirect or provide feedback after submission
-}
 
 
 
@@ -122,24 +168,3 @@ export async function createOrUpdateExistingTask(t: Task) : Promise<Task> {
 }
 
 
-/**
- * Create a task with the given form data
- * Update the sequence number of the task ( == id ) for creating with form
- * Calculate the end date based on the start date and LOE
- * @param formData
- */
-export async function createTask(formData: FormData) {
-    const title = formData.get("title") as string;
-    const desc = formData.get("desc") as string;
-    const sloe = formData.get("loe") as string;
-    const loe = sloe ? parseInt(sloe, 10) : 0;
-    // @ts-ignore
-    await createOrUpdateTaskDbEntry({
-            name: formData.get("title") as string,
-            desc: formData.get("desc") as string,
-            loe: loe
-        }
-    );
-    revalidatePath("/plan");
-    redirect("/plan");
-}

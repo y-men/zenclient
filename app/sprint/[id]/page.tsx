@@ -9,7 +9,12 @@ export default async function EditSprint(props: { params: { id: string } }) {
 
     const {name} = await retriveAllSprintDataById(props.params.id) || {name: "N/A"};
     const owners = ['Thor', 'Fandral', 'Hogun', 'Volstagg', 'Sif'];
-    const deductions = ['Total', 'Vacations', 'KTLO', 'Misc'];
+    const deductions = [
+        {id: '1', name: 'Sprint Ceremonies'},
+        {id: '2', name: 'Vacations'},
+        {id: '3', name: 'KTLO'},
+        {id: '4', name: 'Misc'}
+];
 
     const updateSprintData = async (formData: FormData) => {
         "use server";

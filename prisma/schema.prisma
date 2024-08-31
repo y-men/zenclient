@@ -21,6 +21,8 @@ model Task {
   sprintId         String?
   owner            Owner?    @relation(fields: [ownerId], references: [id])
   ownerId          String?
+  epic             Epic?     @relation(fields: [epicId], references: [id])
+  epicId           String?
   loe              Int?
   startDate        DateTime?
   endDate          DateTime?
@@ -49,6 +51,7 @@ model Sprint {
   name                   String?
   tasks                  Task[]
   sprintOwnerCommitments SprintOwnerCommitment[]
+  epicOwnerCommitments   EpicOwnerCommitment[]
 }
 
 model Owner {
@@ -56,6 +59,7 @@ model Owner {
   name                   String?
   tasks                  Task[]
   sprintOwnerCommitments SprintOwnerCommitment[]
+  epicOwnerCommitments   EpicOwnerCommitment[]
 }
 
 model SprintOwnerCommitment {
@@ -66,4 +70,27 @@ model SprintOwnerCommitment {
   commited Int
 
   @@id([sprintId, ownerId])
+}
+
+model Epic {
+  id                   String                @id @default(uuid())
+  name                 String
+  priority             Int?
+  shortDesc            String?
+  epicDesc             String?
+  tasks                Task[]
+  epicOwnerCommitments EpicOwnerCommitment[]
+}
+
+model EpicOwnerCommitment {
+  epic       Epic   @relation(fields: [epicId], references: [id])
+  epicId     String
+  owner      Owner  @relation(fields: [ownerId], references: [id])
+  ownerId    String
+  sprint     Sprint @relation(fields: [sprintId], references: [id])
+  sprintId   String
+  sprintWeek Int
+  commited   Int
+
+  @@id([epicId, ownerId])
 }

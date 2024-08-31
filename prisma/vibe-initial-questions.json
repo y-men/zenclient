@@ -1,0 +1,450 @@
+{
+  "Customer Obsession": [
+    {
+      "primary": "How well do you feel your team prioritizes customer needs in your daily work?",
+      "followups": [
+        "To what extent do you feel customer feedback is actively integrated into your projects? (1 = Not at All, 5 = Completely)"
+      ]
+    },
+    {
+      "primary": "How often do you think about the long-term impact on customers when making decisions?",
+      "followups": [
+        "How confident are you that your decisions positively impact customer satisfaction? (1 = Not Confident, 5 = Very Confident)"
+      ]
+    },
+    {
+      "primary": "Do you believe your team is consistently focused on improving the customer experience?",
+      "followups": [
+        "How often do you receive actionable insights from customer feedback? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you consider customer pain points when developing new features or services?",
+      "followups": [
+        "How effective is your team at addressing these pain points? (1 = Not Effective, 5 = Very Effective)"
+      ]
+    },
+    {
+      "primary": "How aligned do you feel your work is with Amazon’s goal of customer obsession?",
+      "followups": [
+        "How much support do you receive to focus on customer-centric projects? (1 = No Support, 5 = Full Support)"
+      ]
+    }
+  ],
+  "Ownership": [
+    {
+      "primary": "How responsible do you feel for the success or failure of your projects?",
+      "followups": [
+        "How often do you take ownership beyond your immediate responsibilities? (1 = Never, 5 = Always)"
+      ]
+    },
+    {
+      "primary": "How empowered do you feel to make decisions that affect your work?",
+      "followups": [
+        "How much autonomy do you have in your role? (1 = No Autonomy, 5 = Complete Autonomy)"
+      ]
+    },
+    {
+      "primary": "Do you feel a strong sense of ownership over your work outcomes?",
+      "followups": [
+        "How often do you go the extra mile to ensure project success? (1 = Never, 5 = Always)"
+      ]
+    },
+    {
+      "primary": "How often do you proactively address issues or challenges in your work?",
+      "followups": [
+        "How confident are you that your proactive efforts are recognized? (1 = Not Confident, 5 = Very Confident)"
+      ]
+    },
+    {
+      "primary": "Do you feel that ownership is equally distributed within your team?",
+      "followups": [
+        "How effective is your team at supporting individual ownership? (1 = Not Effective, 5 = Very Effective)"
+      ]
+    }
+  ],
+  "Invent and Simplify": [
+    {
+      "primary": "How often do you bring new ideas to simplify processes or solve problems?",
+      "followups": [
+        "How likely are your ideas to be implemented? (1 = Not Likely, 5 = Very Likely)"
+      ]
+    },
+    {
+      "primary": "How often does your team prioritize simplicity in developing new solutions?",
+      "followups": [
+        "How effective are these simplifications in improving efficiency? (1 = Not Effective, 5 = Very Effective)"
+      ]
+    },
+    {
+      "primary": "How comfortable are you with taking risks to innovate?",
+      "followups": [
+        "How much support do you receive from leadership to innovate? (1 = No Support, 5 = Full Support)"
+      ]
+    },
+    {
+      "primary": "Do you believe your team continuously strives for innovation?",
+      "followups": [
+        "How often do you see these innovations positively impacting your work? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you challenge the status quo in your work?",
+      "followups": [
+        "How open is your team to embracing new ideas? (1 = Not Open, 5 = Very Open)"
+      ]
+    }
+  ],
+  "Are Right, A Lot": [
+    {
+      "primary": "How often do you feel confident in your decisions at work?",
+      "followups": [
+        "How often are your decisions validated by positive outcomes? (1 = Never, 5 = Always)"
+      ]
+    },
+    {
+      "primary": "How well do you balance intuition and data when making decisions?",
+      "followups": [
+        "How often do your data-driven decisions lead to the desired results? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How frequently do you revisit and adjust your decisions based on new information?",
+      "followups": [
+        "How effective are these adjustments in improving outcomes? (1 = Not Effective, 5 = Very Effective)"
+      ]
+    },
+    {
+      "primary": "Do you feel comfortable questioning decisions when you believe there is a better approach?",
+      "followups": [
+        "How often do your suggestions lead to changes in strategy? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you seek diverse perspectives before making a decision?",
+      "followups": [
+        "How often do these perspectives improve the quality of your decisions? (1 = Never, 5 = Very Often)"
+      ]
+    }
+  ],
+  "Learn and Be Curious": [
+    {
+      "primary": "How often do you seek out new learning opportunities?",
+      "followups": [
+        "How satisfied are you with the learning resources available to you? (1 = Not Satisfied, 5 = Very Satisfied)"
+      ]
+    },
+    {
+      "primary": "How much do you focus on learning about areas outside your expertise?",
+      "followups": [
+        "How often does this broadened knowledge benefit your work? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you ask questions to deepen your understanding of a topic?",
+      "followups": [
+        "How effective are your inquiries in expanding your knowledge? (1 = Not Effective, 5 = Very Effective)"
+      ]
+    },
+    {
+      "primary": "How often do you share what you’ve learned with your team?",
+      "followups": [
+        "How valuable do you think this shared knowledge is to your team? (1 = Not Valuable, 5 = Very Valuable)"
+      ]
+    },
+    {
+      "primary": "How comfortable are you with exploring new and unfamiliar topics?",
+      "followups": [
+        "How often does this exploration lead to innovation or improvement? (1 = Never, 5 = Very Often)"
+      ]
+    }
+  ],
+  "Hire and Develop the Best": [
+    {
+      "primary": "How confident are you in the quality of the hires in your team?",
+      "followups": [
+        "How often do new hires meet or exceed your expectations? (1 = Never, 5 = Always)"
+      ]
+    },
+    {
+      "primary": "How actively do you engage in mentoring or developing others?",
+      "followups": [
+        "How effective do you believe your mentoring efforts are? (1 = Not Effective, 5 = Very Effective)"
+      ]
+    },
+    {
+      "primary": "How well do you think your team attracts top talent?",
+      "followups": [
+        "How satisfied are you with the recruiting processes? (1 = Not Satisfied, 5 = Very Satisfied)"
+      ]
+    },
+    {
+      "primary": "How much do you feel the team invests in your development?",
+      "followups": [
+        "How often do these development efforts improve your performance? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you receive feedback that helps you grow?",
+      "followups": [
+        "How useful do you find the feedback provided to you? (1 = Not Useful, 5 = Very Useful)"
+      ]
+    }
+  ],
+  "Insist on the Highest Standards": [
+    {
+      "primary": "How often do you ensure your work meets the highest standards?",
+      "followups": [
+        "How confident are you that your work consistently meets these standards? (1 = Not Confident, 5 = Very Confident)"
+      ]
+    },
+    {
+      "primary": "How often do you challenge the quality of work in your team?",
+      "followups": [
+        "How receptive is your team to feedback aimed at raising standards? (1 = Not Receptive, 5 = Very Receptive)"
+      ]
+    },
+    {
+      "primary": "How often do you revisit your work to ensure it meets high standards?",
+      "followups": [
+        "How much support do you receive to maintain these standards? (1 = No Support, 5 = Full Support)"
+      ]
+    },
+    {
+      "primary": "How well do you think your team balances speed with quality?",
+      "followups": [
+        "How often do you think compromises are made that affect quality? (1 = Often, 5 = Never)"
+      ]
+    },
+    {
+      "primary": "How comfortable are you with holding others accountable to high standards?",
+      "followups": [
+        "How often do you see positive changes when holding others accountable? (1 = Never, 5 = Very Often)"
+      ]
+    }
+  ],
+  "Think Big": [
+    {
+      "primary": "How often do you push boundaries to think beyond the immediate scope of your work?",
+      "followups": [
+        "How often do these ideas lead to new opportunities or projects? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How well do you believe your team encourages ambitious goals?",
+      "followups": [
+        "How often do you see support for executing on big ideas? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How comfortable are you with proposing bold ideas?",
+      "followups": [
+        "How often are your big ideas taken seriously by your team? (1 = Never, 5 = Always)"
+      ]
+    },
+    {
+      "primary": "How much do you focus on long-term goals versus short-term tasks?",
+      "followups": [
+        "How aligned do you feel your long-term goals are with the company’s vision? (1 = Not Aligned, 5 = Fully Aligned)"
+      ]
+    },
+    {
+      "primary": "How often do you think about how your work impacts the company at a broader level?",
+      "followups": [
+        "How often does your team discuss the broader impact of their work? (1 = Never, 5 = Always)"
+      ]
+    }
+  ],
+  "Bias for Action": [
+    {
+      "primary": "How often do you take swift action when faced with a challenge?",
+      "followups": [
+        "How confident are you in your ability to make quick decisions? (1 = Not Confident, 5 = Very Confident)"
+      ]
+    },
+    {
+      "primary": "How well does your team balance speed with thoroughness?",
+      "followups": [
+        "How often do quick actions lead to positive outcomes? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you prioritize taking action over waiting for more information?",
+      "followups": [
+        "How often do these actions result in successful outcomes? (1 = Never, 5 = Always)"
+      ]
+    },
+    {
+      "primary": "How comfortable are you with making decisions under uncertainty?",
+      "followups": [
+        "How often do these decisions lead to the desired results? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you encourage your team to act quickly when opportunities arise?",
+      "followups": [
+        "How often do quick actions by your team lead to innovation or improvement? (1 = Never, 5 = Very Often)"
+      ]
+    }
+  ],
+  "Frugality": [
+    {
+      "primary": "How often do you seek cost-effective solutions to challenges?",
+      "followups": [
+        "How successful are these cost-effective solutions in meeting objectives? (1 = Not Successful, 5 = Very Successful)"
+      ]
+    },
+    {
+      "primary": "How often do you find ways to do more with less in your work?",
+      "followups": [
+        "How often does this frugality lead to increased efficiency? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How mindful are you of resource constraints when planning projects?",
+      "followups": [
+        "How often do you meet project goals while staying within budget? (1 = Never, 5 = Always)"
+      ]
+    },
+    {
+      "primary": "How often do you consider the financial impact of your decisions?",
+      "followups": [
+        "How often do these considerations lead to cost savings? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How effectively do you prioritize spending on what matters most?",
+      "followups": [
+        "How often do you achieve more with fewer resources? (1 = Never, 5 = Very Often)"
+      ]
+    }
+  ],
+  "Earn Trust": [
+    {
+      "primary": "How much trust do you feel exists between you and your team?",
+      "followups": [
+        "How often do you feel your team members rely on you? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you demonstrate transparency in your work?",
+      "followups": [
+        "How effective do you believe transparency is in building trust? (1 = Not Effective, 5 = Very Effective)"
+      ]
+    },
+    {
+      "primary": "How often do you admit mistakes when they occur?",
+      "followups": [
+        "How much do you feel this honesty strengthens trust in your team? (1 = Not at All, 5 = Very Much)"
+      ]
+    },
+    {
+      "primary": "How often do you seek to understand others’ perspectives before making a decision?",
+      "followups": [
+        "How often do these efforts lead to better team dynamics? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you follow through on commitments to your team?",
+      "followups": [
+        "How much do you think this reliability contributes to the trust your team has in you? (1 = Not at All, 5 = Very Much)"
+      ]
+    }
+  ],
+  "Dive Deep": [
+    {
+      "primary": "How often do you dig deep into the details when solving problems?",
+      "followups": [
+        "How effective do you find this deep dive in solving complex issues? (1 = Not Effective, 5 = Very Effective)"
+      ]
+    },
+    {
+      "primary": "How often do you ask probing questions to understand the root cause of a problem?",
+      "followups": [
+        "How often do these questions lead to better solutions? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How comfortable are you with challenging assumptions and exploring details?",
+      "followups": [
+        "How often does this lead to uncovering important insights? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you spend time understanding the details of your projects?",
+      "followups": [
+        "How often do you believe this leads to successful project outcomes? (1 = Never, 5 = Always)"
+      ]
+    },
+    {
+      "primary": "How well do you balance attention to detail with overall project goals?",
+      "followups": [
+        "How often does this balance lead to successful project completion? (1 = Never, 5 = Always)"
+      ]
+    }
+  ],
+  "Have Backbone; Disagree and Commit": [
+    {
+      "primary": "How often do you voice your opinions even if they differ from others?",
+      "followups": [
+        "How often do your differing opinions lead to meaningful discussions? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How comfortable are you with standing your ground when you believe in something?",
+      "followups": [
+        "How often do your convictions positively impact the final decision? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you challenge decisions that you believe are incorrect?",
+      "followups": [
+        "How often does this lead to better outcomes? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How willing are you to commit to a decision once it has been made, even if you disagreed?",
+      "followups": [
+        "How often does this commitment contribute to team success? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How often do you feel your disagreements are respected within your team?",
+      "followups": [
+        "How often do these disagreements lead to constructive outcomes? (1 = Never, 5 = Very Often)"
+      ]
+    }
+  ],
+  "Deliver Results": [
+    {
+      "primary": "How consistently do you meet your performance targets?",
+      "followups": [
+        "How confident are you that your efforts are aligned with company goals? (1 = Not Confident, 5 = Very Confident)"
+      ]
+    },
+    {
+      "primary": "How well do you prioritize tasks to ensure timely delivery of results?",
+      "followups": [
+        "How often do you complete tasks on or ahead of schedule? (1 = Never, 5 = Always)"
+      ]
+    },
+    {
+      "primary": "How often do you measure your progress toward goals?",
+      "followups": [
+        "How effective is this measurement in driving you toward successful outcomes? (1 = Not Effective, 5 = Very Effective)"
+      ]
+    },
+    {
+      "primary": "How confident are you in your ability to overcome obstacles to deliver results?",
+      "followups": [
+        "How often do you find creative solutions to meet or exceed targets? (1 = Never, 5 = Very Often)"
+      ]
+    },
+    {
+      "primary": "How well do you balance delivering results with maintaining quality?",
+      "followups": [
+        "How often do you achieve high-quality results within the given timeline? (1 = Never, 5 = Always)"
+      ]
+    }
+  ]
+}

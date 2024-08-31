@@ -51,23 +51,25 @@ const EffortPage = () => {
                 <div className="w-1/2">
                     {/*<EditButton onToggleEdit={handleToggleEdit}/>*/}
                     <form className="mt-5" action={updateConstraintData}>
+                        <AddTaskSubmit text={"Save"}/>
+                        <hr className="my-3"/>
                         {Object.keys(data).map((key) => {
                             return <div className="form-group row" key={key}>
-                                    <div className="col-sm-8">
-                                        <FormDataField key={key}
-                                                       name={key}
-                                                       displayName={key}
-                                            // @ts-ignore
-                                                       value={Number(data[key])}
-                                                       desc={"Count the number of integration points required"}
-                                                       onChange={hadleValueChange}/>
+                                <div className="col-sm-8">
+                                    <FormDataField key={key}
+                                                   name={key}
+                                                   displayName={key}
+                                        // @ts-ignore
+                                                   value={Number(data[key])}
+                                                   desc={"Count the number of integration points required"}
+                                                   onChange={hadleValueChange}/>
 
-                                    </div>
                                 </div>
+                            </div>
                         })}
 
 
-                        <AddTaskSubmit text={"Save"}/>
+
                     </form>
                 </div>
                 <div className="w-1/2">
