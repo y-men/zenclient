@@ -7,7 +7,7 @@ import {
     SQLLiteTaskRepository,
     SQLLiteSprintRepository,
     SQLLiteConstraintRepository,
-    SQLLiteOwnerRepository, SQLLiteEpicRepository
+    SQLLiteOwnerRepository, SQLLiteEpicRepository, SQLLiteQuartersRepository
 } from "@/db";
 import {revalidatePath} from "next/cache";
 import {number} from "prop-types";
@@ -20,6 +20,7 @@ const sprintRepository: SQLLiteSprintRepository = new SQLLiteSprintRepository();
 const constraintRepository: SQLLiteConstraintRepository = new SQLLiteConstraintRepository();
 const ownersRepository: SQLLiteOwnerRepository = new SQLLiteOwnerRepository();
 const epicRepository: SQLLiteEpicRepository = new SQLLiteEpicRepository();
+const quarterRepository: SQLLiteQuartersRepository = new SQLLiteQuartersRepository()
 
 // TODO: refactor: Consider moving the form oprations to /app pages
 // TODO: refactor: Consider moving to /actions/forms ....
@@ -81,15 +82,26 @@ export async function createTask(formData: FormData) {
 
 
 // -- Retrieve operations -----------------
+
+export async function retrieveQuarterlyPlans(): Promise<{ id: string, name: string, firstMonth: string  }[]> {
+    console.log("====> Retrieving QuarterlyPlans");
+    const quarters = await quarterRepository.getAll();
+    console.dir( quarters)
+    return quarters as { id: string; name: string; firstMonth:string  }[];
+}
+
+
+
 export async function retrieveEpics(): Promise<{ id: string, name: string, shortDesc?: string, epicDesc?: string, priority?: number }[] | null> {
     console.log("====> Retrieving epics");
     const epics = await epicRepository.getAll();
-    console.dir(epics);
+    // console.dir(epics);
     return epics;
 }
 export async function retrieveOwners(): Promise<{ id: string; name: string }[]> {
     console.log("====> Retrieving owners");
     const owners = await ownersRepository.getAll();
+   // console.dir(owners);
     return owners as { id: string; name: string }[];
 }
 

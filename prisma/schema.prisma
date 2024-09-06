@@ -47,19 +47,23 @@ model Constraint {
 }
 
 model Sprint {
-  id                     String                  @id @default(uuid())
+  id                     String                   @id @default(uuid())
   name                   String?
+  quarter                Quarter                  @relation(fields: [quarterId], references: [id])
+  quarterId              String                   @default("Q12024")
   tasks                  Task[]
   sprintOwnerCommitments SprintOwnerCommitment[]
   epicOwnerCommitments   EpicOwnerCommitment[]
+  QuarterOwnerCommitment QuarterOwnerCommitment[]
 }
 
 model Owner {
-  id                     String                  @id @default(uuid())
+  id                     String                   @id @default(uuid())
   name                   String?
   tasks                  Task[]
   sprintOwnerCommitments SprintOwnerCommitment[]
   epicOwnerCommitments   EpicOwnerCommitment[]
+  QuarterOwnerCommitment QuarterOwnerCommitment[]
 }
 
 model SprintOwnerCommitment {
@@ -73,13 +77,14 @@ model SprintOwnerCommitment {
 }
 
 model Epic {
-  id                   String                @id @default(uuid())
-  name                 String
-  priority             Int?
-  shortDesc            String?
-  epicDesc             String?
-  tasks                Task[]
-  epicOwnerCommitments EpicOwnerCommitment[]
+  id                     String                   @id @default(uuid())
+  name                   String
+  priority               Int?
+  shortDesc              String?
+  epicDesc               String?
+  tasks                  Task[]
+  epicOwnerCommitments   EpicOwnerCommitment[]
+  QuarterOwnerCommitment QuarterOwnerCommitment[]
 }
 
 model EpicOwnerCommitment {
@@ -93,4 +98,29 @@ model EpicOwnerCommitment {
   commited   Int
 
   @@id([epicId, ownerId])
+}
+
+model Quarter {
+  id                     String                   @id // Q1-2024 quarter-year
+  year                   String
+  quarter                String
+  firstMonth             String                   @default("Jan") // Jan, Apr, Jul, Oct
+  displayName            String?
+  sprints                Sprint[]
+  QuarterOwnerCommitment QuarterOwnerCommitment[]
+}
+
+// Commit to an Epic in a sprint week
+model QuarterOwnerCommitment {
+  quarter   Quarter @relation(fields: [quarterId], references: [id])
+  quarterId String
+  epic      Epic    @relation(fields: [epicId], references: [id])
+  epicId    String
+  owner     Owner   @relation(fields: [ownerId], references: [id])
+  ownerId   String
+  sprint    Sprint  @relation(fields: [sprintId], references: [id])
+  sprintId  String
+  week      String // w1,w2....w13
+
+  @@id([ownerId, week, epicId])
 }

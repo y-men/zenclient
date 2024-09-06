@@ -35,10 +35,10 @@ export const EditButton = ({ onToggleEdit }) => {
     );
 };
 
-export function AddTaskSubmit( props: { text?: string ,pendingText?: string }) {
+export function ActionSubmitButton(props: { text?: string ,pendingText?: string ,  }) {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" className="btn" disabled={pending}>
+    <button type="submit" className="btn" disabled={pending} >
       {pending ? props.pendingText|| "Creating..." : props.text || "Create"}
     </button>
   );

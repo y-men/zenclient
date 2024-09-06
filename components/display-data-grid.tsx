@@ -8,11 +8,15 @@ import {router} from "next/client";
 import {useRouter} from "next/navigation";
 
 
-export default function DisplayDataGrid() {
+export default function DisplayDataGrid({ columns , rows, routePrefix = "sprint"}: { columns?: any[], rows?: any[], routePrefix?: string }) {
     const router = useRouter();
-    const activeSprints = useGlobalStore(state => state.sprints);
-    console.log(activeSprints);
-    const columnDefs = [
+
+    // If columns are not provided, use the default columns
+    const sprintRows = useGlobalStore(state => state.sprints);
+    rows = rows ?? sprintRows;
+
+
+    const columnDefs = columns ?? [
         { headerName: ' ', field: 'actions' },
         { headerName: 'Id', field: 'id' },
         { headerName: 'Name', field: 'name' },
@@ -21,7 +25,7 @@ export default function DisplayDataGrid() {
     return (
         <div className="ag-theme-quartz" style={{ height: '100%', width: '100%' }}>
             <AgGridReact
-                rowData={activeSprints}
+                rowData={rows}
                 // @ts-ignore
                 columnDefs={columnDefs}
                 defaultColDef={{
@@ -39,7 +43,7 @@ export default function DisplayDataGrid() {
                 }}
                 onRowClicked={(event: any) => {
                     console.log("row clicked", event.data);
-                    router.push(`/sprint/${event.data.id}`);
+                    router.push(`/${routePrefix}/${event.data.id}`);
                 } }
 
             />

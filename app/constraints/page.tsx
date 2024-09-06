@@ -1,7 +1,7 @@
 //import React, { useState } from 'react';
 
 "use client";
-import {AddTaskSubmit, EditButton} from "@/components/grid-action-submit";
+import {ActionSubmitButton, EditButton} from "@/components/grid-action-submit";
 //import { AddTaskSubmit } from "@/components/grid-action-submit";
 import {retrieveConstraints, updateConstraintData} from "@/actions";
 import {useEffect, useState} from "react";
@@ -51,7 +51,7 @@ const EffortPage = () => {
                 <div className="w-1/2">
                     {/*<EditButton onToggleEdit={handleToggleEdit}/>*/}
                     <form className="mt-5" action={updateConstraintData}>
-                        <AddTaskSubmit text={"Save"}/>
+                        <ActionSubmitButton text={"Save"}/>
                         <hr className="my-3"/>
                         {Object.keys(data).map((key) => {
                             return <div className="form-group row" key={key}>

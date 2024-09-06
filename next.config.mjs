@@ -5,6 +5,10 @@
 import removeImports from 'next-remove-imports';
 
 const nextConfig = removeImports()({
+    images: {
+        domains: ['source.unsplash.com'], // Allow images from unsplash
+    },
+
     webpack(config, { dev, isServer }) {
         if (dev && !isServer) {
             // Enables source maps in development for client-side code
@@ -16,13 +20,3 @@ const nextConfig = removeImports()({
 export default nextConfig;
 
 
-// const nextConfig = {
-//     webpack(config, { dev, isServer }) {
-//         if (dev && !isServer) {
-//             // Enables source maps in development for client-side code
-//             config.devtool = 'source-map';
-//         }
-//         return config;
-//     }
-// };
-// export default nextConfig;

@@ -3,7 +3,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import {AddTaskSubmit} from "@/components/grid-action-submit";
+import {ActionSubmitButton} from "@/components/grid-action-submit";
 import MDEditor, { commands } from "@uiw/react-md-editor"
 import {dlog} from "@/utils";
 import {addEpicFormAction} from "@/actions";
@@ -87,17 +87,17 @@ export default function AddEpic() {
         }
     }, []);
 
-    // TODO: Better to invlidate the flag when the form is submitted ( Maybe this also causeign refresh issues )
-    useEffect(() => {
-        setEpicsValid(false);
-    }, []);
+    // // TODO: Better to invlidate the flag when the form is submitted ( Maybe this also causeign refresh issues )
+    // useEffect(() => {
+    //     setEpicsValid(false);
+    // }, []);
 
     return (
         <div className="container-fluid mt-5">
             <h1>Add Epic</h1>
-            <form className="mx-3 mt-4" action={addEpicFormAction}>
+            <form className="mx-3 mt-4" action={addEpicFormAction} onSubmit={()=>{setEpicsValid(false)}}>
                 <div className="mb-3">
-                    <AddTaskSubmit text={"Save"} />
+                    <ActionSubmitButton text={"Save"} />
                 </div>
                 <hr className="my-3"/>
                 {formElements.map((element) => getFormElement(element))}

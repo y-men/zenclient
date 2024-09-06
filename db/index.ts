@@ -17,6 +17,14 @@ abstract class PrismaRepository <T> {
     this.entity = entity;
   }
 
+  async create(item: T): Promise<T> {
+    // @ts-ignore
+    const createdItem = await ( this.prisma[this.entity] as PrismaClient).create({
+      data: item,
+    });
+    return createdItem as T;
+  }
+
   async getAll(): Promise<T[] | null> {
     // @ts-ignore
     const items = await ( this.prisma[this.entity] as PrismaClient).findMany();
@@ -32,8 +40,44 @@ abstract class PrismaRepository <T> {
     return owner as T;
   }
 }
+// ------------------  Quarters Repository -----------------
+export class SQLLiteQuartersRepository extends PrismaRepository<{ id: string;
+  displayName?: string
+  firstMonth: string
+    year: string
+    quarter: string
+
+}> {
+  constructor() {
+    super("quarter");
+  }
+}
+
+//TODO Move to model ?
+export interface IQuarterCommitment {
+    quarterId: string;
+    ownerId: string;
+    epicId :string;
+    sprintId: string;
+    week: string;
+}
+
+/**
+ * @packageDocumentation
+ * Quarter commitemet per week is a unique object and can be added and removed
+ * According to the number of commitments we can determine the HC commited to and epic in each week
+ */
+export class SQLLiteQuarterOwnerCommitmentRepository extends PrismaRepository<IQuarterCommitment> {
+    constructor() {
+        super("quarterOwnerCommitment");
+    }
+}
 
 // ------------------  Repository -----------------
+
+
+
+
 export class SQLLiteEpicRepository extends PrismaRepository<{
   id: string;
   name: string

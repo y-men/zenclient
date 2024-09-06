@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Card, Spinner } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import classes from "./page.module.css";
+import StyledImage from "@/app/home/styled-image";
 
 
 interface Item {
@@ -62,7 +63,7 @@ const Home: React.FC = () => {
                 border: "1px solid lightgrey",
                 color: "lightgrey",
             }}>
-                Atmosphere art acc to time
+                <StyledImage />
             </div>
             <div className="mb-4 text-center">
                 <span className={classes.jotiOneWelcome}>{getHomePageGreeting()}</span>

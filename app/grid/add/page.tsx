@@ -1,5 +1,5 @@
 import { createTask } from "@/actions";
-import { AddTaskSubmit } from "@/components/grid-action-submit";
+import { ActionSubmitButton } from "@/components/grid-action-submit";
 
 export default function AddTaskPage() {
   // async function createTask(formData: FormData) {
@@ -54,7 +54,7 @@ export default function AddTaskPage() {
           {/* <button type="submit" className="btn">
             Create
           </button> */}
-          <AddTaskSubmit/>
+          <ActionSubmitButton/>
         </div>
       </form>
     </div>
