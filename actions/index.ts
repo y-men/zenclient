@@ -24,6 +24,17 @@ const quarterRepository: SQLLiteQuartersRepository = new SQLLiteQuartersReposito
 
 // TODO: refactor: Consider moving the form oprations to /app pages
 // TODO: refactor: Consider moving to /actions/forms ....
+// -- Image operations -----------------
+
+export async function getRandomImage() {
+    const res = await fetch(`https://api.unsplash.com/photos/random?client_id=${process.env.PUBLIC_UNSPLASH_ACCESS_KEY}`);
+    if (!res.ok) {
+        throw new Error("Failed to fetch image from Unsplash");
+    }
+    return await res.json();
+}
+
+
 // -- Form operations -----------------
 export async function addEpicFormAction(formData: FormData): Promise<void> {
     dlog()

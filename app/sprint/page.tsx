@@ -31,4 +31,4 @@ export default async function Sprints() {
 
         </div>
     )
-} // Path: src/app/constraints/page.tsx
+} // Path: src/app/constraints/home-items-container.tsx

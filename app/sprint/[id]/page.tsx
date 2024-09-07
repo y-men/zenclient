@@ -7,7 +7,7 @@ import {HydrateGlobalStore} from "@/components/hydrate-store";
 
 export default async function EditSprint(props: { params: { id: string } }) {
 
-    const {name} = await retriveAllSprintDataById(props.params.id) || {name: "N/A"};
+    const {name} = (await retriveAllSprintDataById(props.params.id)) || {name: "N/A"};
     const owners = ['Thor', 'Fandral', 'Hogun', 'Volstagg', 'Sif'];
     const deductions = [
         {id: '1', name: 'Sprint Ceremonies'},

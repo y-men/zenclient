@@ -6,7 +6,7 @@ import removeImports from 'next-remove-imports';
 
 const nextConfig = removeImports()({
     images: {
-        domains: ['source.unsplash.com'], // Allow images from unsplash
+        domains: ['images.unsplash.com'], // Allow images from unsplash
     },
 
     webpack(config, { dev, isServer }) {

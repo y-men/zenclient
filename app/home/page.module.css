@@ -6,3 +6,18 @@
     font-size: 48px;
     font-style: normal;
 }
+.imageContainer {
+    position: relative;
+    width: 100%;
+    height: 500px; /* Set your preferred height */
+    overflow: hidden;
+}
+
+.styledImage {
+    filter: grayscale(100%); /* Apply monochrome effect */
+
+    -webkit-mask-image: radial-gradient(circle at bottom left, transparent 20%, black 60%);
+    mask-image: radial-gradient(circle at bottom left, transparent 20%, black 60%);
+    mask-composite: intersect;
+}
+

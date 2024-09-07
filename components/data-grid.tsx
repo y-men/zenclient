@@ -97,7 +97,7 @@ export default function DataGrid({rows}: { rows: any[] | null }) {
                                 loe: row.loe,
                                 startDate: formatDate(row.startDate), // or use any other formatting method you prefer
                                 endDate: formatDate(row.endDate)
-                            }) as any,
+                            } as any),
                     )
                     : []
             }

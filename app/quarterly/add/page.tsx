@@ -25,12 +25,12 @@ export default function AddQuarterlyPlanPage() {
 
         // Add the quarterly plan
         const quarterlyRepositoy = new SQLLiteQuartersRepository();
-        formData.get("quarterName") && await quarterlyRepositoy.create({
+        formData.get("quarterName") && (await quarterlyRepositoy.create({
             id: formData.get("quarterName") as string,
             year: formData.get("year") as string,
             quarter: formData.get("quarter") as string,
             firstMonth: formData.get("firstMonth") as string
-        });
+        }));
 
         // Add the commitments
 

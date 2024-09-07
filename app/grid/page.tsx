@@ -26,4 +26,4 @@ export default async function Grid() {
 
         </div>
     );
-} // Path: src/app/plan/page.tsx
+} // Path: src/app/plan/home-items-container.tsx
