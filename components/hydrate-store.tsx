@@ -1,56 +1,55 @@
-
 "use client";
-import {useGlobalStore} from "@/store/global-store";
-import {retrieveActiveSprints, retrieveOwners , retrieveEpics } from "@/actions";
-import {useEffect} from "react";
-
-// export const HydrateGlobalStore = (
-//     {sprints, owners}: { sprints?: { id: string; name: string }[], owners?: { id: string; name: string }[] },
-// ) => {
+import { useGlobalStore } from "@/store/global-store";
+import { retrieveActiveSprints, retrieveOwners, retrieveEpics } from "@/actions";
+import { useEffect } from "react";
 
 // @ts-ignore
-export const HydrateGlobalStore = ({children}) => {
-    const owners = useGlobalStore(state => state.owners);
-    const sprints = useGlobalStore(state => state.sprints);
-    const epics = useGlobalStore(state => state.epics);
-
-    const setSprints = useGlobalStore(state => state.setSprints);
-    const setOwners = useGlobalStore(state => state.setOwners);
-    const setEpics = useGlobalStore(state => state.setEpics);
-
-    const isSprintsValid = useGlobalStore(state => state.isSprintsValid);
-    const isOwnersValid = useGlobalStore(state => state.isOwnersValid);
-    const isEpicsValid = useGlobalStore(state => state.isEpicsValid);
-
-    const setSprintsValid = useGlobalStore(state => state.setSprintsValid);
-    const setOwnersValid = useGlobalStore(state => state.setOwnersValid);
-    const setEpicsValid = useGlobalStore(state => state.setEpicsValid);
+export const HydrateGlobalStore = ({ children }) => {
+    // Accessing state and actions from the global store
+    const {
+        owners, sprints, epics,
+        setSprints, setOwners, setEpics,
+        isSprintsValid, isOwnersValid, isEpicsValid,
+        setSprintsValid, setOwnersValid, setEpicsValid
+    } = useGlobalStore(state => ({
+        owners: state.owners,
+        sprints: state.sprints,
+        epics: state.epics,
+        setSprints: state.setSprints,
+        setOwners: state.setOwners,
+        setEpics: state.setEpics,
+        isSprintsValid: state.isSprintsValid,
+        isOwnersValid: state.isOwnersValid,
+        isEpicsValid: state.isEpicsValid,
+        setSprintsValid: state.setSprintsValid,
+        setOwnersValid: state.setOwnersValid,
+        setEpicsValid: state.setEpicsValid
+    }));
 
     useEffect(() => {
         if (!isSprintsValid) {
             (async () => {
-                const activeSprintsFromDb: { id: string, name: string }[] | null = await retrieveActiveSprints();
+                const activeSprintsFromDb = await retrieveActiveSprints();
                 setSprints(activeSprintsFromDb);
                 setSprintsValid(true);
             })()
         }
         if (!isOwnersValid) {
             (async () => {
-                const ownersFromDb: { id: string, name: string }[] | null = await retrieveOwners();
+                const ownersFromDb = await retrieveOwners();
                 setOwners(ownersFromDb);
                 setOwnersValid(true)
             })()
         }
-        if( !isEpicsValid) {
+        if (!isEpicsValid) {
             (async () => {
-                //TODO: refactor : This is a great example why i should create a model for epics and all the other entities
-                // The optional fields nedded to be defined in the model and changes only one place
-                const epicsFromDb: { id: string, name: string, shortDesc?:string, epicDesc?:string, priority?:number }[] | null = await retrieveEpics();
-                setEpics(epicsFromDb!);
+                const epicsFromDb = await retrieveEpics();
+                //@ts-expect-error
+                setEpics(epicsFromDb);
                 setEpicsValid(true)
             })()
         }
+    }, [isSprintsValid, isOwnersValid, isEpicsValid ])
 
-    })
     return <>{children}</>;
 }

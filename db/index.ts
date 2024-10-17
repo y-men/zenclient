@@ -3,8 +3,7 @@
 import { Task } from "../model/task";
 import { PrismaClient } from "@prisma/client";
 
-
-//todo Add interfaces for repositories
+//TODO Add interfaces for repositories
 //todo Migrate the classes use the "abstract" Prisma repository
 /**
  * A generic repository for Prisma
@@ -15,6 +14,16 @@ abstract class PrismaRepository <T> {
 
   constructor( entity:string) {
     this.entity = entity;
+  }
+
+  async upsert<T extends { id: string }>(item: T): Promise<T> {
+    // @ts-ignore
+    const updatedItem = await ( this.prisma[this.entity] as PrismaClient).upsert({
+      where: { id: item.id },
+      update: item,
+      create: item,
+    });
+    return updatedItem as T;
   }
 
   async create(item: T): Promise<T> {
@@ -39,28 +48,41 @@ abstract class PrismaRepository <T> {
     });
     return owner as T;
   }
-}
-// ------------------  Quarters Repository -----------------
-export class SQLLiteQuartersRepository extends PrismaRepository<{ id: string;
-  displayName?: string
-  firstMonth: string
-    year: string
-    quarter: string
 
-}> {
-  constructor() {
+
+
+}
+// --------------------------------------------------------------------------------------------
+
+interface IQuarter{ id: string; displayName?: string; firstMonth: string; year: string; quarter: string ; }
+export class SQLLiteQuartersRepository extends PrismaRepository<IQuarter> {
+   constructor() {
     super("quarter");
   }
+
+  // TODO refactor: What can we move to the PrismaRepository ?
+  // async upsert(quarter: IQuarter): Promise<IQuarter> {
+  //   const q = await this.prisma.quarter.upsert({
+  //     where: { id: quarter.id },
+  //     update: quarter,
+  //     create: quarter,
+  //   });
+  //   return q as IQuarter;
+  // }
 }
+
+// --------------------------------------------------------------------------------------------
 
 //TODO Move to model ?
 export interface IQuarterCommitment {
-    quarterId: string;
-    ownerId: string;
-    epicId :string;
-    sprintId: string;
-    week: string;
+  ownerId: string;
+  week: string;
+  epicId: string;
+  quarterId: string;
+  sprintId?: string;
+  commited?: number;
 }
+
 
 /**
  * @packageDocumentation
@@ -71,10 +93,38 @@ export class SQLLiteQuarterOwnerCommitmentRepository extends PrismaRepository<IQ
     constructor() {
         super("quarterOwnerCommitment");
     }
+
+  async getCommitmentsByQuarter(quarterId: string): Promise<IQuarterCommitment[] | null> {
+      "use server"
+    const commitments = await this.prisma.quarterOwnerCommitment.findMany({
+      where: {
+        quarterId: quarterId,
+      },
+    });
+//console.log(`### getCommitmentsByQuarter: ${commitments}`);
+//console.dir(commitments);
+    return commitments as IQuarterCommitment[];
+  }
+
+  //@ts-ignore
+  async upsert(quarterOwnerCommitment: IQuarterCommitment): Promise<IQuarterCommitment> {
+    const qoc = await this.prisma.quarterOwnerCommitment.upsert({
+      where: {
+        ownerId_week_epicId: {
+          ownerId: quarterOwnerCommitment.ownerId,
+          week: quarterOwnerCommitment.week,
+          epicId: quarterOwnerCommitment.epicId
+        }
+      },
+      update: quarterOwnerCommitment,
+      // @ts-ignore
+      create: quarterOwnerCommitment
+    });
+    return qoc as IQuarterCommitment
+  }
 }
 
-// ------------------  Repository -----------------
-
+// --------------------------------------------------------------------------------------------
 
 
 
@@ -95,14 +145,14 @@ export class SQLLiteEpicRepository extends PrismaRepository<{
         return e as { id: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number };
     }
 
-    async upsert(epic: { id?: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number }): Promise<{ id: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number }> {
-        const e = await this.prisma.epic.upsert({
-            where: { id: epic.id },
-            update: { name: epic.name, shortDesc: epic.shortDesc, epicDesc: epic.epicDesc, priority: epic.priority },
-            create: { name: epic.name, shortDesc: epic.shortDesc, epicDesc: epic.epicDesc, priority: epic.priority },
-        });
-        return e as { id: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number };
-    }
+    // async upsert(epic: { id?: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number }): Promise<{ id: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number }> {
+    //     const e = await this.prisma.epic.upsert({
+    //         where: { id: epic.id },
+    //         update: { name: epic.name, shortDesc: epic.shortDesc, epicDesc: epic.epicDesc, priority: epic.priority },
+    //         create: { name: epic.name, shortDesc: epic.shortDesc, epicDesc: epic.epicDesc, priority: epic.priority },
+    //     });
+    //     return e as { id: string; name: string; shortDesc?: string; epicDesc?: string; priority?: number };
+    // }
 }
 
 
@@ -116,25 +166,27 @@ export class  SQLLiteOwnerRepository extends PrismaRepository<{ id: string; name
 
 
 // ----------------- Sprint Repository -----------------
+// TODO Extend the PrismaRepository
 export class SQLLiteSprintRepository extends PrismaRepository<{ id: string; name: string }> {
   constructor() {
     super("sprint");
   }
 
-  async create(sprint: { id: string; name: string }): Promise<{ id: string; name: string }> {
+  async create(sprint: { id: string; name: string, quarterId?:string }):
+      Promise<{ id: string; name: string, quarterId?:string }> {
     const s = await this.prisma.sprint.create({
       data: sprint,
     });
     return s as { id: string; name: string };
   }
-  async upsert(sprint: { id?: string; name: string }): Promise<{ id: string; name: string }> {
-    const s = await this.prisma.sprint.upsert({
-      where: { id: sprint.id },
-      update: { name: sprint.name },
-      create: { name: sprint.name },
-    });
-    return s as { id: string; name: string };
-  }
+  // async upsert(sprint: { id?: string; name: string }): Promise<{ id: string; name: string }> {
+  //   const s = await this.prisma.sprint.upsert({
+  //     where: { id: sprint.id },
+  //     update: { name: sprint.name },
+  //     create: { name: sprint.name },
+  //   });
+  //   return s as { id: string; name: string };
+  // }
 }
 
 // ----------------- SprintOwnerCommitment Repository -----------------
@@ -143,11 +195,12 @@ export class SQLLiteSprintOwnerCommitmentRepository extends PrismaRepository<{ i
         super("sprintOwnerCommitment");
     }
 
+  // @ts-ignore
   async upsert(sprintOwnerCommitment: { sprintId: string; ownerId: string; commited: number }):
       Promise<{ id: string; sprintId: string; ownerId: string; commited: number }> {
     const s = await this.prisma.sprintOwnerCommitment.upsert({
 
-// Use unique composite key constraint
+  //Use unique composite key constraint
       where: {
         sprintId_ownerId: {
           sprintId: sprintOwnerCommitment.sprintId,

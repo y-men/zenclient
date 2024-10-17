@@ -7,7 +7,7 @@ import {
     SQLLiteTaskRepository,
     SQLLiteSprintRepository,
     SQLLiteConstraintRepository,
-    SQLLiteOwnerRepository, SQLLiteEpicRepository, SQLLiteQuartersRepository
+    SQLLiteOwnerRepository, SQLLiteEpicRepository, SQLLiteQuartersRepository, SQLLiteQuarterOwnerCommitmentRepository
 } from "@/db";
 import {revalidatePath} from "next/cache";
 import {number} from "prop-types";
@@ -21,6 +21,9 @@ const constraintRepository: SQLLiteConstraintRepository = new SQLLiteConstraintR
 const ownersRepository: SQLLiteOwnerRepository = new SQLLiteOwnerRepository();
 const epicRepository: SQLLiteEpicRepository = new SQLLiteEpicRepository();
 const quarterRepository: SQLLiteQuartersRepository = new SQLLiteQuartersRepository()
+const quarterlyRepositoy = new SQLLiteQuartersRepository();
+const quarterOwnerCommitmentRepository = new SQLLiteQuarterOwnerCommitmentRepository();
+
 
 // TODO: refactor: Consider moving the form oprations to /app pages
 // TODO: refactor: Consider moving to /actions/forms ....
@@ -34,8 +37,71 @@ export async function getRandomImage() {
     return await res.json();
 }
 
+// -- Quarterly Form operations -----------------
 
-// -- Form operations -----------------
+const calculateSprintFromWeek = async (week: string, year: string, quarter:string ) : Promise<string> => {
+    "use server"
+    const weekNumber = parseInt(week.replace("w", ""));
+    const sprintNumber = Math.ceil(weekNumber / 2);
+    return `S${sprintNumber}${quarter}${year}`;
+}
+
+//TODO Maybe here is a better place for actions related to pages
+export async function saveQuarterlyPlan(formData: FormData) {
+    "use server"
+    console.log("#### Saving Quarterly Plan");
+    console.dir(formData);
+
+    // Add the quarterly plan
+    const year = formData.get("year") as string;
+    const quarterName = formData.get("quarterName") as string;
+    const quarter = formData.get("quarter") as string;
+    await quarterlyRepositoy.upsert({
+        id: quarterName,
+        year: year,
+        quarter: quarter,
+        firstMonth: formData.get("firstMonth") as string
+    });
+
+    // Add sprints for this quarter and sprint connections
+    for (let i = 1; i <= 6; i++) {
+        await sprintRepository.upsert({
+            id: `S${i}${quarter}${year}`,
+            quarterId: formData.get("quarterName") as string,
+            name:`S${i}${quarter}`
+        });
+    }
+
+    //Add the commitments
+    const qc = JSON.parse(formData.get("sprintData") as string);
+    for (const owner of qc) {
+        const weekProperties = Object.keys(owner).filter(key => key.startsWith('w'));
+        for (const week of weekProperties) {
+            if( owner[week]) {
+
+                // Save only if there is a commitment
+                const sprintId: string = await calculateSprintFromWeek(week, year, quarter)
+                const data = {
+                    ownerId: owner.id,
+                    epicId: owner[week],
+                    sprintId: sprintId,
+                    week: week,
+                    quarterId: formData.get("quarterName") as string,
+//TODO: Remove the 'commited' field - no functional value
+                    commited: 1
+                }
+                await quarterOwnerCommitmentRepository.upsert(data);
+            }
+        }
+    }
+    // Revalidate the page
+    revalidatePath("/quarterly");
+    redirect("/quarterly");
+
+}
+
+
+// -- Epic Form operations -----------------
 export async function addEpicFormAction(formData: FormData): Promise<void> {
     dlog()
     console.log(formData);
@@ -95,9 +161,10 @@ export async function createTask(formData: FormData) {
 // -- Retrieve operations -----------------
 
 export async function retrieveQuarterlyPlans(): Promise<{ id: string, name: string, firstMonth: string  }[]> {
-    console.log("====> Retrieving QuarterlyPlans");
+    // console.log("====> Retrieving QuarterlyPlans");
     const quarters = await quarterRepository.getAll();
-    console.dir( quarters)
+    // console.dir( quarters)
+    //@ts-ignore
     return quarters as { id: string; name: string; firstMonth:string  }[];
 }
 
@@ -164,14 +231,14 @@ export async function retriveAllSprintDataById(sprintId: string): Promise<{ id: 
     return sprint as { id: string; name: string };
 }
 
-export async function createOrUpdateSprint(sprint: { id?: string; name: string }, data?:any): Promise<void> {
-
-    // Handle the constraints data
-
-    await sprintRepository.upsert(sprint);
-    revalidatePath("/sprints");
-    redirect("/sprints");
-}
+// export async function createOrUpdateSprint(sprint: { id?: string; name: string }, data?:any): Promise<void> {
+//
+//     // Handle the constraints data
+//
+//     await sprintRepository.upsert(sprint);
+//     revalidatePath("/sprints");
+//     redirect("/sprints");
+// }
 
 // -- Task operations -----------------
 

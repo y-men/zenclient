@@ -2,6 +2,7 @@
 import classes from "./header.module.css";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
+import {useGlobalStore} from "@/store/global-store";
 
 //todo Add fous routes as a global configuration react context or zustand store
 
@@ -12,6 +13,7 @@ const focusRoutes = ["/focus", "/", "/coffee"];
 export default function Header() {
     const currentRoute = usePathname();
     const isFocusRoute = focusRoutes.includes(currentRoute);
+    const currentQuarter = useGlobalStore(state => state.currentQuarter);
 
     return (
         <span>
@@ -51,7 +53,7 @@ export default function Header() {
               </span>
                 {/*Quarterly*/}
                 <span style={{borderRight: "1px solid #ccc", paddingRight: "20px"}}>
-                <Link href="/quarterly">Quarterly</Link>
+                <Link href={`/quarterly/${currentQuarter}`}>Quarterly</Link>
               </span>
                 <span>
                 <Link href="/epic">Epics</Link>

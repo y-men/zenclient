@@ -121,6 +121,7 @@ model QuarterOwnerCommitment {
   sprint    Sprint  @relation(fields: [sprintId], references: [id])
   sprintId  String
   week      String // w1,w2....w13
+  commited  Int
 
   @@id([ownerId, week, epicId])
 }

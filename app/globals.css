@@ -77,6 +77,11 @@ a:hover, a:focus, a:active {
     color: inherit !important;
 }
 
+.nav-link {
+    border-right: 1px solid #ccc !important;
+    padding-right: 20px !important;
+}
+
 /* Custom Button Styles */
 .btn {
     display: inline-block;
@@ -87,3 +92,5 @@ a:hover, a:focus, a:active {
     border-radius: 4px !important;
     align-self: flex-start;
 }
+
+
