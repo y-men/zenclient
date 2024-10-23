@@ -12,7 +12,7 @@ import {
 import {revalidatePath} from "next/cache";
 import {number} from "prop-types";
 import {Log} from "@/model/decorators";
-import {dlog} from "@/utils";
+import {dlog, getCurrentQuarter} from "@/utils";
 
 // Todo use injection
 const taskRepository: SQLLiteTaskRepository = new SQLLiteTaskRepository();
@@ -27,6 +27,127 @@ const quarterOwnerCommitmentRepository = new SQLLiteQuarterOwnerCommitmentReposi
 
 // TODO: refactor: Consider moving the form oprations to /app pages
 // TODO: refactor: Consider moving to /actions/forms ....
+
+
+
+
+// -- Epic Form operations -----------------
+
+// @ts-ignore
+export async function retriveEpicsHeadCountInvestment(): Promise<number[][]> {
+    dlog()
+    // Retrieve the commitment data for the epics
+    const currentQuarter = getCurrentQuarter();
+    const commitments = await quarterOwnerCommitmentRepository.getCommitmentsByQuarter(currentQuarter) || [];
+    console.dir(commitments);
+
+    const epics = await epicRepository.getAll() || [];
+    const owners = await ownersRepository.getAll() || [];
+
+    // Create a map to store the accumulated commitment for each epic per owner
+    const epicOwnerCommitment: Map<string, Map<string, number>> = new Map();
+
+    // Initialize the map with all epics and owners, setting initial commitments to 0
+    epics.forEach(epic => {
+        const ownerMap = new Map<string, number>();
+        owners.forEach(owner => {
+            ownerMap.set(owner.id, 0);
+        });
+        epicOwnerCommitment.set(epic.id, ownerMap);
+    });
+
+    // Calculate the total number of weeks in the quarter
+    const totalWeeksInQuarter = 12; // Assuming a standard quarter with 12 weeks
+
+    // Process each commitment
+    for (const commitment of commitments) {
+        const epicKey = commitment.epicId;
+        const ownerKey = commitment.ownerId;
+
+        if (epicOwnerCommitment.has(epicKey)) {
+            const ownerMap = epicOwnerCommitment.get(epicKey)!;
+            const currentCommitment = ownerMap.get(ownerKey) || 0;
+            // @ts-ignore
+            ownerMap.set(ownerKey, currentCommitment + commitment.commited);
+        }
+    }
+
+    // Convert the map to a matrix
+    const matrix: number[][] = epics.map(epic => {
+        const ownerMap = epicOwnerCommitment.get(epic.id);
+        if (!ownerMap) {
+            return owners.map(() => 0); // Return an array of zeros if no commitments for this epic
+        }
+        return owners.map(owner => {
+            const commitment = ownerMap.get(owner.id) || 0;
+            return commitment / totalWeeksInQuarter; // Convert to 1/x format
+        });
+    });
+
+    console.log(">>>>> Matrix data");
+    console.dir(matrix);
+
+    return matrix;
+}
+
+
+
+export async function addEpicFormAction(formData: FormData): Promise<void> {
+    dlog()
+    console.log(formData);
+    await epicRepository.create({
+        name: formData.get("name") as string,
+        shortDesc: formData.get("shortDescription") as string,
+        epicDesc: formData.get("epicDescription") as string,
+        priority: parseInt(formData.get("priority") as string) ?? 99
+    });
+    revalidatePath("/epic");
+    redirect("/epic");
+}
+
+/**
+ * Handle additional information nedded for calculation of constraints values
+ * @param formData
+ */
+export async function updateConstraintData(formData: FormData): Promise<void> {
+    let promises: Promise<{ name: string, value: number, project: string }>[] = [];
+    Array.from(formData.entries()).forEach(([key, value]) => {
+        console.log(`>> ${key}, ${value}  `);
+        const p: Promise<{ name: string; value: number; project: string }> =
+            constraintRepository.upsert({name: key, value: parseInt(value as string, 10), project: "ALL"})
+        promises.push(p);
+
+    })
+    Promise.allSettled(promises!).then(() => {
+        console.log("All constraints updated");
+    })
+
+    // todo Redirect or provide feedback after submission
+}
+
+/**
+ * Create a task with the given form data
+ * Update the sequence number of the task ( == id ) for creating with form
+ * Calculate the end date based on the start date and LOE
+ * @param formData
+ */
+export async function createTask(formData: FormData) {
+    const title = formData.get("title") as string;
+    const desc = formData.get("desc") as string;
+    const sloe = formData.get("loe") as string;
+    const loe = sloe ? parseInt(sloe, 10) : 0;
+    // @ts-ignore
+    await createOrUpdateTaskDbEntry({
+            name: formData.get("title") as string,
+            desc: formData.get("desc") as string,
+            loe: loe
+        }
+    );
+    revalidatePath("/plan");
+    redirect("/plan");
+}
+
+
 // -- Image operations -----------------
 
 export async function getRandomImage() {
@@ -100,62 +221,6 @@ export async function saveQuarterlyPlan(formData: FormData) {
 
 }
 
-
-// -- Epic Form operations -----------------
-export async function addEpicFormAction(formData: FormData): Promise<void> {
-    dlog()
-    console.log(formData);
-    await epicRepository.create({
-        name: formData.get("name") as string,
-        shortDesc: formData.get("shortDescription") as string,
-        epicDesc: formData.get("epicDescription") as string,
-        priority: parseInt(formData.get("priority") as string) ?? 99
-    });
-    revalidatePath("/epic");
-    redirect("/epic");
-}
-
-/**
- * Handle additional information nedded for calculation of constraints values
- * @param formData
- */
-export async function updateConstraintData(formData: FormData): Promise<void> {
-    let promises: Promise<{ name: string, value: number, project: string }>[] = [];
-    Array.from(formData.entries()).forEach(([key, value]) => {
-        console.log(`>> ${key}, ${value}  `);
-        const p: Promise<{ name: string; value: number; project: string }> =
-            constraintRepository.upsert({name: key, value: parseInt(value as string, 10), project: "ALL"})
-        promises.push(p);
-
-    })
-    Promise.allSettled(promises!).then(() => {
-        console.log("All constraints updated");
-    })
-
-    // todo Redirect or provide feedback after submission
-}
-
-/**
- * Create a task with the given form data
- * Update the sequence number of the task ( == id ) for creating with form
- * Calculate the end date based on the start date and LOE
- * @param formData
- */
-export async function createTask(formData: FormData) {
-    const title = formData.get("title") as string;
-    const desc = formData.get("desc") as string;
-    const sloe = formData.get("loe") as string;
-    const loe = sloe ? parseInt(sloe, 10) : 0;
-    // @ts-ignore
-    await createOrUpdateTaskDbEntry({
-            name: formData.get("title") as string,
-            desc: formData.get("desc") as string,
-            loe: loe
-        }
-    );
-    revalidatePath("/plan");
-    redirect("/plan");
-}
 
 
 // -- Retrieve operations -----------------

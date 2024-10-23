@@ -20,11 +20,11 @@ export default async function Sprints() {
     return (
         <div className="container-fluid d-flex flex-column" style={{height: '100%'}}>
             <h1>Sprints Page</h1>
-            <Link href="/sprint/add/">
-                <button className="btn btn-primary mb-2">
-                    Add Sprint
-                </button>
-            </Link>
+            {/*<Link href="/sprint/add/">*/}
+            {/*    <button className="btn btn-primary mb-2">*/}
+            {/*        Add Sprint*/}
+            {/*    </button>*/}
+            {/*</Link>*/}
             <HydrateGlobalStore >
                 <DisplayDataGrid/>
             </HydrateGlobalStore>

@@ -1,5 +1,5 @@
 
-// Internal logging
+// ----  Internal logging
 const red = "\x1b[31m";
 const reset = "\x1b[0m";
 
@@ -29,3 +29,19 @@ function parseStackLine(line: string) {
         isToplevel: !matched[1] && !matched[2]
     };
 }
+
+// --- Time and Date utilies -----------------
+
+export const getCurrentQuarter = (): string => {
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    let quarter;
+
+    if (month < 3) quarter = 'Q1';
+    else if (month < 6) quarter = 'Q2';
+    else if (month < 9) quarter = 'Q3';
+    else quarter = 'Q4';
+
+    return `${quarter}${year}`;
+};

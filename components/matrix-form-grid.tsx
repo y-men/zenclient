@@ -1,12 +1,13 @@
 "use client";
 
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {AgGridReact} from 'ag-grid-react';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import {useGlobalStore} from "@/store/global-store";
 
 
+// TODO check if wee need the subject here
 interface RowData {
     subject: string;
 
@@ -25,7 +26,8 @@ interface RowData {
  */
 const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
                             matrixFormAction = () => {},
-                            addtionalActions = []
+                            addtionalActions = [],
+                           initialData=null
 }
                         : {
     x?: {id:string,name:string }  [],
@@ -36,22 +38,33 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
     totalUnits?: number,
     matrixFormAction?: Function
     addtionalActions?: { name: string, action:Function } []
+    initialData?: number[][]| null
 }) => {
 
     //Use global store to retrieve the epics if the y-axis is not provided
-
-
     x = useGlobalStore(state => state.owners);
 
-    // Alway add 'Total' to the y-axis
+    //
+    // console.log(`>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>`)
+    // console.dir(initialData)
+
+    // Always add 'Total' to the y-axis
     y = [{id:`totals`, name:`Total`}, ...y];
     const createRowData = () => {
         const rowData: RowData [] = [];
         y.forEach((entry, index) => {
             const row: RowData = {subject: entry.id};
-            x.forEach((owner) => {
-                row[owner.id] = index === 0 ? totalUnits : 0;
-                // @ts-ignore
+            // x.forEach((owner) => {
+            //     row[owner.id] = index === 0 ? totalUnits : 0;
+
+            x.forEach((owner, colIndex) => {
+                    if (index === 0) {
+                            row[owner.id] = totalUnits;
+                        } else if (initialData && index <= initialData.length && colIndex < initialData[index - 1].length) {
+                            row[owner.id] = initialData[index - 1][colIndex];
+                        } else {
+                           row[owner.id] = 0;
+                       }
             });
             rowData.push(row);
         });
@@ -68,7 +81,8 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
             let sum = 0;
             x.forEach((owner) => {
                 // @ts-ignore
-                sum += row[owner.id];
+//                sum += row[owner.id];
+                sum += Number(row[owner.id]);
             });
             row.acc = sum;
         });
@@ -78,6 +92,12 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
     };
 
     const [rowData, setRowData] = useState(createRowData);
+
+    //Add the initial data to the row data
+    useEffect(() => {
+            setRowData(createRowData());
+        }, [initialData]);
+
     const columns = useMemo(() => {
         const cols = [
             {
@@ -94,6 +114,13 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
                 headerName: 'Accumulated',
                 field: 'acc',
                 editable: false,
+                valueFormatter: (params: any) => {
+                    if (typeof params.value === 'number') {
+                        return params.value.toFixed(2) as string;
+                    }
+                    return params.value;
+                }
+
             }
         ];
 
@@ -104,7 +131,28 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
                 // @ts-ignore
 
                 editable: (params) => params.node.rowIndex !== 0 && params.node.data.deduction !== 'Summary',
-                valueParser: (params: { newValue: string; }) => parseFloat(params.newValue) || 0,
+                valueFormatter: (params: any) => {
+                    if (typeof params.value === 'number') {
+                        return params.value.toFixed(2) as string;
+                    }
+                    return params.value;
+                },
+                cellStyle: (params: any) => {
+                    const rowIndex = params.node.rowIndex;
+                    const lastRowIndex = params.api.getDisplayedRowCount() - 1;
+
+                    // Exclude the `Total` row and the 'Summary' row
+                    if (rowIndex !== 0
+                        && rowIndex !== lastRowIndex
+                        && typeof params.value === 'number') {
+                        return params.value > 0 ? {backgroundColor: 'lightYellow'} : {};
+                    }
+                    return {}; // Return empty object for the first and last rows or non-numeric values
+                }
+
+
+                // valueParser: (params: { newValue: string; }) => parseFloat(params.newValue) || 0,
+
             });
         });
 
@@ -132,8 +180,10 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
         x.forEach((owner) => {
             let sum = updatedData[0][owner.id];
             for (let i = 1; i < y.length; i++) {
+//                sum -= updatedData[i][owner.id];
                 // @ts-ignore
-                sum -= updatedData[i][owner.id];
+                sum -= Number(updatedData[i][owner.id]);
+
             }
             updatedData[y.length][owner.id] = sum; // Update the summary row
         });
@@ -191,7 +241,14 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
                     defaultColDef={{
                         flex: 1,
                         minWidth: 100,
-                        resizable: true
+                        resizable: true,
+                        // valueFormatter: (params: any) => {
+                        //     if (typeof params.value === 'number') {
+                        //         return params.value.toFixed(2) as string;
+                        //     }
+                        //     return params.value;
+                        // }
+
                     }}
                     animateRows={false}
                     onCellValueChanged={onCellValueChanged}

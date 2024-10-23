@@ -3,7 +3,7 @@ import MatrixFormGrid from "@/components/matrix-form-grid";
 import {dlog} from "@/utils";
 import {redirect} from "next/navigation";
 import {WithEpics} from "@/app/epic/with-epics";
-
+import {retriveEpicsHeadCountInvestment} from "@/actions";
 
 export default async function EpicsPage() {
 
@@ -16,6 +16,7 @@ export default async function EpicsPage() {
     //Just a dummy data
     const epics = [{ id: '1', name: 'Epic 1' }, { id: '2', name: 'Epic 2' }, { id: '3', name: 'Epic 3' }];
 
+    const epicsHeadCountInvestment = await retriveEpicsHeadCountInvestment();
     return (
         <div className="container-fluid d-flex flex-column" style={{height: '100%'}}>
             <h1>Epics</h1>
@@ -26,6 +27,9 @@ export default async function EpicsPage() {
                                 headerName={"Epic"}
                                 totalUnits={1}
                                 addtionalActions= {[{ name:`Add Epic`, action:addEpicAction }]}
+                                // @ts-ignore
+                                initialData={epicsHeadCountInvestment}
+
                     />
                 </WithEpics>
             </HydrateGlobalStore>
