@@ -1,5 +1,4 @@
 
-// -----
 /** @type {import('next').NextConfig} */
 
 import removeImports from 'next-remove-imports';
@@ -7,6 +6,9 @@ import removeImports from 'next-remove-imports';
 const nextConfig = removeImports()({
     images: {
         domains: ['images.unsplash.com'], // Allow images from unsplash
+    },
+    experimental: {
+        instrumentationHook: true,
     },
 
     webpack(config, { dev, isServer }) {

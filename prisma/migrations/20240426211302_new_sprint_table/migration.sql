@@ -14,6 +14,6 @@ CREATE TABLE "new_Task" (
 );
 INSERT INTO "new_Task" ("desc", "id", "name") SELECT "desc", "id", "name" FROM "Task";
 DROP TABLE "Task";
-ALTER TABLE "new_Task" RENAME TO "Task";
+ALTER TABLE "new_Task" RENAME TO "Types";
 PRAGMA foreign_key_check;
 PRAGMA foreign_keys=ON;
