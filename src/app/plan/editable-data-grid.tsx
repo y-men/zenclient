@@ -6,11 +6,12 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useState } from "react";
 import { EditableGridActionButton } from "@/components/grid-action-submit";
-import { Types } from "@/model/types";
+
 import {createOrUpdateExistingTask, deleteTask, retrieveTasks} from "@/actions";
 import {revalidatePath} from "next/cache";
 import {redirect} from "next/navigation";
 import {useGlobalStore} from "@/store/global-store";
+import {ITask} from "@/model/types";
 
 const EditableDataGrid = (
     { rows }: { rows: any[] | null },
@@ -18,6 +19,7 @@ const EditableDataGrid = (
 
     const activeSprints = useGlobalStore(state => state.sprints);
     const owners = useGlobalStore(state => state.owners);
+    const epics = useGlobalStore(state => state.epics);
     const [rowData, setRowData] = useState(rows);
     // activeSprints = activeSprints ? activeSprints : [];
     // owners = owners ? owners : [];
@@ -74,12 +76,22 @@ const EditableDataGrid = (
                 />
             )
         },
-        { field: "id", name: "ID" },
+       // { field: "id", name: "ID" },
+        {
+            field: "epicId",
+            name: "Epic",
+            editable: false,
+            cellEditor: "agTextCellEditor",
+            maxWidth: 100,
+            valueFormatter: (params: any) => epics!.find((epic) => epic.id === params.value)?.name
+
+        },
         {
             field: "name",
             name: "Title",
             editable: true,
             cellEditor: "agTextCellEditor",
+            minWidth: 300
         },
         {
             field: "sprintId",
@@ -94,13 +106,13 @@ const EditableDataGrid = (
                 return selectedSprint?.name
             }
         },
-        {
-            field: "desc",
-            name: "Description",
-            editable: true,
-            cellEditor: "agTextCellEditor",
-
-        },
+        // {
+        //     field: "desc",
+        //     name: "Description",
+        //     editable: true,
+        //     cellEditor: "agTextCellEditor",
+        //
+        // },
         {
             field: "ownerId",
             name: "Owner",
@@ -111,7 +123,7 @@ const EditableDataGrid = (
                 // Make sure the values are sorted so that N/A is always the first option
                 values: owners!.map((owner  ) => owner.id).sort((a, b) =>  Number(a) - Number(b))
             },
-            valueFormatter: (params: any) => owners!.find((owner) => Number(owner.id) === Number(params.value))?.name
+            valueFormatter: (params: any) => owners!.find((owner) => owner.id === params.value)?.name
         },
         {
             field: "loe",
@@ -143,7 +155,7 @@ const EditableDataGrid = (
                 editType={"fullRow"}
                 animateRows={false}
                 onRowValueChanged={async (params: any) => {
-                    const updatedTask: Types = params.data;
+                    const updatedTask: ITask = params.data;
                     const createdTask = await createOrUpdateExistingTask(updatedTask);
                     const updatedRows = await retrieveTasks();
                     setRowData(updatedRows);

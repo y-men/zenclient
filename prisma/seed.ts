@@ -1,6 +1,14 @@
-import { PrismaClient } from "@prisma/client";
-import { saveQuarterlyPlanUseCase } from "@/use-cases"; // Changed from @/use-cases to relative path
 
+import 'reflect-metadata';  // Import metadata polyfill at the very top
+//@ts-ignore
+// This file is run as a script, with its own context, so we need to import the polyfill here as well
+import {ISaveQuarterlyPlanUseCase} from "@/model/types";
+//@ts-ignore
+import container from "@/model/inversify.config";
+//@ts-ignore
+import {TYPES} from "@/model/container";
+
+import { PrismaClient } from "@prisma/client";
 interface IOwnerCommitment {
     id: string;
     name: string ;
@@ -144,7 +152,12 @@ const seed = async () => {
 
         // 4. Call saveQuarterlyPlan with our prepared FormData
         console.log("4. Calling saveQuarterlyPlan with prepared data");
-        await saveQuarterlyPlanUseCase(qdata);
+        // const saveQuarterlyPlanUseCase = new SaveQuarterlyPlanUseCase();
+        // await saveQuarterlyPlanUseCase.saveQuarterlyPlan(qdata);
+
+        // Use container to trigger the injections
+        const saveQuarterlyPlanUseCase = container.get<ISaveQuarterlyPlanUseCase>(TYPES.SaveQuarterlyPlanUseCase);
+        await saveQuarterlyPlanUseCase.saveQuarterlyPlan(qdata);
 
         // 5. Add some sample tasks
         console.log("5. Adding task data");

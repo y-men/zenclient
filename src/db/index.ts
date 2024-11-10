@@ -1,6 +1,13 @@
 
 import { PrismaClient } from "@prisma/client";
-import {IQuarter, IQuarterOwnerCommitment, ISprint, ISprintRepository, ITask} from "@/model/types";
+import {
+  IQuarter,
+  IQuarterOwnerCommitment,
+  ISprint,
+  ISprintOwnerCommitment,
+  ISprintRepository,
+  ITask
+} from "@/model/types";
 import { injectable, inject } from 'inversify';
 import { TYPES } from '@/model/container';
 
@@ -50,6 +57,12 @@ abstract class PrismaRepository <T> {
       },
     });
     return owner as T;
+  }
+
+  async findMany(filter: any): Promise<T[] | null> {
+    // @ts-ignore
+    const items = await ( this.prisma[this.entity] as PrismaClient).findMany(filter);
+    return items as any[];
   }
 }
 
@@ -159,7 +172,10 @@ export class  SQLLiteOwnerRepository extends PrismaRepository<{ id: string; name
 
 
 // ----------------- SprintOwnerCommitment Repository -----------------
-export class SQLLiteSprintOwnerCommitmentRepository extends PrismaRepository<{ id: string; sprintId: string; ownerId: string; units: number }> {
+export class SQLLiteSprintOwnerCommitmentRepository extends PrismaRepository
+//    <{ id: string; sprintId: string; ownerId: string; units: number }>
+<ISprintOwnerCommitment>
+{
     // constructor() {
     //     super("sprintOwnerCommitment");
     // }
@@ -168,25 +184,28 @@ export class SQLLiteSprintOwnerCommitmentRepository extends PrismaRepository<{ i
     }
 
   // @ts-ignore
-  async upsert(sprintOwnerCommitment: { sprintId: string; ownerId: string; commited: number }):
-      Promise<{ id: string; sprintId: string; ownerId: string; commited: number }> {
+  async upsert(sprintOwnerCommitment: ISprintOwnerCommitment):
+      Promise<ISprintOwnerCommitment> {
     const s = await this.prisma.sprintOwnerCommitment.upsert({
 
   //Use unique composite key constraint
       where: {
-        sprintId_ownerId: {
+        sprintId_ownerId_deductionId: {
           sprintId: sprintOwnerCommitment.sprintId,
-          ownerId: sprintOwnerCommitment.ownerId
+          ownerId: sprintOwnerCommitment.ownerId,
+            deductionId: sprintOwnerCommitment.deductionId
+
         }
       },
       update: {commited: sprintOwnerCommitment.commited},
       create: {
         sprintId: sprintOwnerCommitment.sprintId,
         ownerId: sprintOwnerCommitment.ownerId,
+        deductionId: sprintOwnerCommitment.deductionId,
         commited: sprintOwnerCommitment.commited
       },
     });
-    return s as { id: string; sprintId: string; ownerId: string; commited: number };
+    return s as ISprintOwnerCommitment
   }
 }
 

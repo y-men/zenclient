@@ -1,7 +1,7 @@
 
 import {retrieveActiveSprints, retrieveQuarterlyPlans, retrieveTasks} from "../../actions";
 import {HydrateGlobalStore} from "@/components/hydrate-store";
-import EditableDataGrid from "@/components/editable-data-grid";
+// import EditableDataGrid from "@/components/editable-data-grid";
 import DisplayDataGrid from "@/components/display-data-grid";
 import Link from "next/link";
 

@@ -7,8 +7,9 @@
     "noEmit": true,
     "baseUrl": "..",
     "paths": {
-      "@/*": ["./*"]
-    }
+      "@/*": ["src/*"]
+    },
+    "types": ["node","jest","reflect-metadata"]
   },
   "include": [
     "../**/*.ts",

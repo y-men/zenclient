@@ -24,21 +24,22 @@ interface RowData {
  * @param addtionalActions
  * @constructor
  */
-const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
+const MatrixFormGrid = ({
+                            x, y, headerName = "Deductions", totalUnits = 10,
                             matrixFormAction = () => {},
                             addtionalActions = [],
-                           initialData=null
-}
-                        : {
-    x?: {id:string,name:string }  [],
+                            initialData = null
+                        }
+                            : {
+    x?: { id: string, name: string }  [],
 //y: string [],
-    y: {id:string,name:string }  [],
+    y: { id: string, name: string }  [],
 
     headerName?: string,
     totalUnits?: number,
     matrixFormAction?: Function
-    addtionalActions?: { name: string, action:Function } []
-    initialData?: number[][]| null
+    addtionalActions?: { name: string, action: Function } []
+    initialData?: number[][] | null
 }) => {
 
     //Use global store to retrieve the epics if the y-axis is not provided
@@ -49,7 +50,7 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
     // console.dir(initialData)
 
     // Always add 'Total' to the y-axis
-    y = [{id:`totals`, name:`Total`}, ...y];
+    y = [{id: `totals`, name: `Total`}, ...y];
     const createRowData = () => {
         const rowData: RowData [] = [];
         y.forEach((entry, index) => {
@@ -58,13 +59,13 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
             //     row[owner.id] = index === 0 ? totalUnits : 0;
 
             x.forEach((owner, colIndex) => {
-                    if (index === 0) {
-                            row[owner.id] = totalUnits;
-                        } else if (initialData && index <= initialData.length && colIndex < initialData[index - 1].length) {
-                            row[owner.id] = initialData[index - 1][colIndex];
-                        } else {
-                           row[owner.id] = 0;
-                       }
+                if (index === 0) {
+                    row[owner.id] = totalUnits;
+                } else if (initialData && index <= initialData.length && colIndex < initialData[index - 1].length) {
+                    row[owner.id] = initialData[index - 1][colIndex];
+                } else {
+                    row[owner.id] = 0;
+                }
             });
             rowData.push(row);
         });
@@ -95,8 +96,8 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
 
     //Add the initial data to the row data
     useEffect(() => {
-            setRowData(createRowData());
-        }, [initialData]);
+        setRowData(createRowData());
+    }, [initialData]);
 
     const columns = useMemo(() => {
         const cols = [
@@ -202,6 +203,46 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
         updateHiddenInput();
     };
 
+    /**
+     * Clear all values in the grid
+     * @param e
+     */
+    const handleClearAll = (e: React.MouseEvent) => {
+        e.preventDefault(); // Prevent form submission
+
+        const updatedData = rowData.map((row, index) => {
+            // Keep the first row (totals) unchanged
+            if (index === 0 || row.subject === 'Summary') {
+                return {...row};
+            }
+
+            // Create new row with all values set to 0
+            const clearedRow: RowData = {
+                subject: row.subject,
+                acc: 0
+            };
+
+            // Set all owner values to 0
+            x.forEach((owner) => {
+                clearedRow[owner.id] = 0;
+            });
+
+            return clearedRow;
+        });
+
+        // Update summary row
+        const lastIndex = updatedData.length - 1;
+        x.forEach((owner) => {
+            updatedData[lastIndex][owner.id] = totalUnits;
+        });
+        updatedData[lastIndex].acc = totalUnits * x.length;
+
+        setRowData(updatedData);
+        updateHiddenInput();
+    };
+
+
+
     // @ts-ignore
     return (
         // @ts-ignore
@@ -219,10 +260,19 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
                 <button className="btn btn-primary mb-2" type="submit">
                     Save
                 </button>
+                <button
+                    type="button"
+                    className="btn btn-secondary mb-2 ms-2"
+                    onClick={handleClearAll}
+                >
+                    Clear
+                </button>
                 {addtionalActions.map((action) => (
                     // @ts-ignore
-                    <button key={action.name} className="btn btn-primary mb-2 ms-2"
-                            onClick={() =>  action.action()}>
+                    <button key={action.name}
+                            className="btn btn-primary mb-2 ms-2"
+                            type="button"
+                            onClick={() => action.action()}>
                         {action.name}
                     </button>
                 ))}
@@ -232,7 +282,7 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
                 name="sprintData"
                 ref={hiddenInputRef}
             />
-            <div className="ag-theme-quartz" style={{height: '100%', width: '100%'}} >
+            <div className="ag-theme-quartz" style={{height: '100%', width: '100%'}}>
                 <AgGridReact
                     ref={gridRef}
                     rowData={rowData}
@@ -262,7 +312,7 @@ const MatrixFormGrid = ({x, y, headerName = "Deductions", totalUnits = 10,
 
             </div>
         </form>
-);
+    );
 };
 
 export default MatrixFormGrid;

@@ -66,14 +66,16 @@ model Owner {
   QuarterOwnerCommitment QuarterOwnerCommitment[]
 }
 
+//TODO This one probably should be reviewed
 model SprintOwnerCommitment {
-  sprint   Sprint @relation(fields: [sprintId], references: [id])
-  sprintId String
-  owner    Owner  @relation(fields: [ownerId], references: [id])
-  ownerId  String
-  commited Int
+  sprint      Sprint @relation(fields: [sprintId], references: [id])
+  sprintId    String
+  owner       Owner  @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  deductionId Int
+  commited    Int // to deduct from the sprint
 
-  @@id([sprintId, ownerId])
+  @@id([sprintId, ownerId, deductionId])
 }
 
 model Epic {

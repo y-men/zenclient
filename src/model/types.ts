@@ -77,10 +77,11 @@ export interface IOwner {
 }
 
 export interface ISprintOwnerCommitment {
-  sprint: ISprint;
+  sprint?: ISprint;
   sprintId: string;
-  owner: IOwner;
+  owner?: IOwner;
   ownerId: string;
+  deductionId: number;
   commited: number;
 }
 

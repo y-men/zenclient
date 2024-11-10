@@ -32,7 +32,7 @@ function parseStackLine(line: string) {
 
 // --- Time and Date utilies -----------------
 
-export const getCurrentQuarter = (): string => {
+function getCurrentQuarterByCalendar() {
     const now = new Date();
     const month = now.getMonth();
     const year = now.getFullYear();
@@ -44,4 +44,9 @@ export const getCurrentQuarter = (): string => {
     else quarter = 'Q4';
 
     return `${quarter}${year}`;
+}
+
+export const getCurrentQuarter = (): string => {
+    // return getCurrentQuarterByCalendar();
+    return "Q22024";
 };

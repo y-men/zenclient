@@ -1,7 +1,8 @@
-import EditableDataGrid from "@/components/editable-data-grid"
+//import EditableDataGrid from '@/plan/editable-data-grid';
 import {retrieveActiveSprints, retrieveTasks, retrieveOwners} from "@/actions";
 import {useGlobalStore} from "@/store/global-store";
 import {HydrateGlobalStore} from "@/components/hydrate-store";
+import EditableDataGrid from "@/app/plan/editable-data-grid";
 
 
 export default async function Plan() {
