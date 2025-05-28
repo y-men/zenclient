@@ -11,14 +11,19 @@ import {
 import {revalidatePath} from "next/cache";
 import {dlog, getCurrentQuarter} from "@/utils";
 
-import {ISaveQuarterlyPlanUseCase, ITask} from "@/model/types";
+import {
+    IConstraint,
+    IConstraintUseCase,
+    ISaveQuarterlyPlanUseCase,
+    ITask
+} from "@/model/types";
 import container from "@/model/inversify.config";
 import {TYPES} from "@/model/container";
 
 // Todo use injection
 const taskRepository: SQLLiteTaskRepository = new SQLLiteTaskRepository();
 const sprintRepository: SQLLiteSprintRepository = new SQLLiteSprintRepository();
-const constraintRepository: SQLLiteConstraintRepository = new SQLLiteConstraintRepository();
+//const constraintRepository: SQLLiteConstraintRepository = new SQLLiteConstraintRepository();
 const ownersRepository: SQLLiteOwnerRepository = new SQLLiteOwnerRepository();
 const epicRepository: SQLLiteEpicRepository = new SQLLiteEpicRepository();
 const quarterRepository: SQLLiteQuartersRepository = new SQLLiteQuartersRepository()
@@ -108,21 +113,21 @@ export async function addEpicFormAction(formData: FormData): Promise<void> {
  * Handle additional information nedded for calculation of constraints values
  * @param formData
  */
-export async function updateConstraintData(formData: FormData): Promise<void> {
-    let promises: Promise<{ name: string, value: number, project: string }>[] = [];
-    Array.from(formData.entries()).forEach(([key, value]) => {
-        console.log(`>> ${key}, ${value}  `);
-        const p: Promise<{ name: string; value: number; project: string }> =
-            constraintRepository.upsert({name: key, value: parseInt(value as string, 10), project: "ALL"})
-        promises.push(p);
-
-    })
-    Promise.allSettled(promises!).then(() => {
-        console.log("All constraints updated");
-    })
-
-    // todo Redirect or provide feedback after submission
-}
+// export async function updateConstraintData(formData: FormData): Promise<void> {
+//     let promises: Promise<{ name: string, value: number, project: string }>[] = [];
+//     Array.from(formData.entries()).forEach(([key, value]) => {
+//         console.log(`>> ${key}, ${value}  `);
+//         const p: Promise<{ name: string; value: number; project: string }> =
+//             constraintRepository.upsert({name: key, value: parseInt(value as string, 10), project: "ALL"})
+//         promises.push(p);
+//
+//     })
+//     Promise.allSettled(promises!).then(() => {
+//         console.log("All constraints updated");
+//     })
+//
+//     // todo Redirect or provide feedback after submission
+// }
 
 /**
  * Create a task with the given form data
@@ -179,6 +184,14 @@ export async function saveQuarterlyPlan(formData: FormData, isRevalidatePage: bo
 
 
 // -- Retrieve operations -----------------
+export async function retrieveConstraints(): Promise<IConstraint[] | null> {
+    console.log("====> Retrieving constraints");
+
+    // TODO Will be able to inject this when we get the actions into class ?
+    const constraintUseCase = container.get<IConstraintUseCase>(TYPES.ConstraintUseCase);
+    const constraints = await constraintUseCase.getAllConstraints();
+    return constraints;
+}
 
 export async function retrieveQuarterlyPlans(): Promise<{ id: string, name: string, firstMonth: string  }[]> {
     // console.log("====> Retrieving QuarterlyPlans");
@@ -228,11 +241,11 @@ export async function retrieveTasks(): Promise<ITask[] | null> {
 }
 
 // --- Constraint operations -----------------
-export async function retrieveConstraints(): Promise<{ name: string, value: number, project: string }[] | null> {
-    const constraints = await constraintRepository.getAll();
-    return constraints;
-
-}
+// export async function retrieveConstraints(): Promise<{ name: string, value: number, project: string }[] | null> {
+//     const constraints = await constraintRepository.getAll();
+//     return constraints;
+//
+// }
 
 // -- Sprint operations -----------------
 

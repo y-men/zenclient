@@ -38,14 +38,6 @@ model Task {
   dependents       Task[]    @relation("TaskDependency")
 }
 
-model Constraint {
-  project String
-  name    String
-  value   Int
-
-  @@id([name, project])
-}
-
 model Sprint {
   id                     String                   @id @default(uuid())
   name                   String?
@@ -55,6 +47,7 @@ model Sprint {
   sprintOwnerCommitments SprintOwnerCommitment[]
   epicOwnerCommitments   EpicOwnerCommitment[]
   QuarterOwnerCommitment QuarterOwnerCommitment[]
+  Constraint             Constraint[]
 }
 
 model Owner {
@@ -64,6 +57,7 @@ model Owner {
   sprintOwnerCommitments SprintOwnerCommitment[]
   epicOwnerCommitments   EpicOwnerCommitment[]
   QuarterOwnerCommitment QuarterOwnerCommitment[]
+  Constraint             Constraint[]
 }
 
 //TODO This one probably should be reviewed
@@ -87,6 +81,7 @@ model Epic {
   tasks                  Task[]
   epicOwnerCommitments   EpicOwnerCommitment[]
   QuarterOwnerCommitment QuarterOwnerCommitment[]
+  Constraint             Constraint[]
 }
 
 model EpicOwnerCommitment {
@@ -126,4 +121,18 @@ model QuarterOwnerCommitment {
   commited  Int
 
   @@id([ownerId, week, epicId])
+}
+
+model Constraint {
+  id       String  @id @default(uuid())
+  name     String
+  type     String  @default("Global") // Global, Sprint, Epic
+  epic     Epic?   @relation(fields: [epicId], references: [id])
+  epicId   String?
+  owner    Owner?  @relation(fields: [ownerId], references: [id])
+  ownerId  String?
+  sprint   Sprint? @relation(fields: [sprintId], references: [id])
+  sprintId String?
+  units    String  @default("Absolute") // Absolute, Perc
+  value    Float
 }

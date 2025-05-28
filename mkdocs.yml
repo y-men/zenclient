@@ -1,0 +1,23 @@
+site_name: Zengrid Client
+#theme: material
+theme: readthedocs
+nav:
+  - Home: index.md
+  - About: about.md
+  - Architecture:
+    - Authentication Flow: auth.md
+
+dev_addr: 127.0.0.1:8001  # Development server address
+plugins:
+  - mermaid2
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid
+
+
+
+

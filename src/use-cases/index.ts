@@ -8,25 +8,38 @@
 import {SQLLiteQuarterOwnerCommitmentRepository, SQLLiteQuartersRepository, SQLLiteSprintRepository} from "@/db";
 import { TYPES } from '@/model/container';
 import container from "@/model/inversify.config";
-import {ISaveQuarterlyPlanData, ISaveQuarterlyPlanUseCase, type ISprintRepository,} from "@/model/types";
+import {
+    IConstraint,
+    type IConstraintRepository,
+    IConstraintUseCase,
+    ISaveQuarterlyPlanData,
+    ISaveQuarterlyPlanUseCase,
+    type ISprintRepository,
+} from "@/model/types";
 import {inject, injectable} from "inversify";
 
-//const sprintRepository: SQLLiteSprintRepository = new SQLLiteSprintRepository();
 
-//const sprintRepository = container.get<ISprintRepository>(TYPES.SprintRepository);
-
-
-// --- Quarterly Plan Use Case -------------------------------------------
-
-
+/**
+ * Handling of constraints
+ */
 @injectable()
-export default class SaveQuarterlyPlanUseCase implements ISaveQuarterlyPlanUseCase {
+export class ConstraintUseCase implements IConstraintUseCase {
+    // @ts-ignore
+    @inject(TYPES.ConstraintRepository) private constraintRepository: IConstraintRepository;
+    public async getAllConstraints(): Promise<IConstraint[]> {
+        const constraints = await this.constraintRepository.getAll();
+        return constraints || [];
+    }
+
+}
+/**
+ * Handling of quartely plan data
+ */
+@injectable()
+export class SaveQuarterlyPlanUseCase implements ISaveQuarterlyPlanUseCase {
 
     //@ts-ignore
     @inject(TYPES.SprintRepository) private sprintRepository: ISprintRepository;
-    // constructor(
-    //     @inject(TYPES.SprintRepository) private sprintRepository: ISprintRepository
-    // ) {}
 
     private quarterlyRepository = new SQLLiteQuartersRepository();
     private quarterOwnerCommitmentRepository = new SQLLiteQuarterOwnerCommitmentRepository();

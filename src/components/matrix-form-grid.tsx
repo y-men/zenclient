@@ -45,10 +45,6 @@ const MatrixFormGrid = ({
     //Use global store to retrieve the epics if the y-axis is not provided
     x = useGlobalStore(state => state.owners);
 
-    //
-    // console.log(`>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>`)
-    // console.dir(initialData)
-
     // Always add 'Total' to the y-axis
     y = [{id: `totals`, name: `Total`}, ...y];
     const createRowData = () => {

@@ -5,6 +5,7 @@ export const TYPES = {
     QuarterRepository: Symbol.for('QuartersRepository'),
     SprintRepository: Symbol.for('SprintRepository'),
     CommitmentRepository: Symbol.for('QuarterOwnerCommitmentRepository'),
-
-    SaveQuarterlyPlanUseCase: Symbol.for('SaveQuarterlyPlanUseCase')
+    ConstraintRepository: Symbol.for('ConstraintRepository'),
+    SaveQuarterlyPlanUseCase: Symbol.for('SaveQuarterlyPlanUseCase'),
+    ConstraintUseCase: Symbol.for('ConstraintUseCase')
 };

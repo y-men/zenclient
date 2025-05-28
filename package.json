@@ -12,7 +12,10 @@
     "seed": "DATABASE_URL=\"file:./dev.db\" ts-node --project prisma/tsconfig.seed.json -r tsconfig-paths/register prisma/seed.ts",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "docs:serve": "cd docs && mkdocs serve",
+    "docs:build": "cd docs && mkdocs build"
+
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",

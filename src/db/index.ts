@@ -1,6 +1,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import {
+  IConstraint, IConstraintRepository, IConstraintUseCase,
   IQuarter,
   IQuarterOwnerCommitment,
   ISprint,
@@ -70,6 +71,13 @@ abstract class PrismaRepository <T> {
 export class SQLLiteSprintRepository extends PrismaRepository<ISprint> implements ISprintRepository {
   getTargetEntity(): any {
     return "sprint";
+  }
+}
+
+@injectable()
+export class SQLLiteConstraintRepository extends PrismaRepository<IConstraint> implements IConstraintRepository{
+  getTargetEntity(): any {
+    return "constraint";
   }
 }
 
@@ -212,45 +220,45 @@ export class SQLLiteSprintOwnerCommitmentRepository extends PrismaRepository
 
 // ----------------- Constraint Repository -----------------
 
-export  class SQLLiteConstraintRepository {
-    constructor() {}
-
-    prisma = new PrismaClient({ log: ["query", "error", "warn", "info"] });
-    async getAll(): Promise<{ name: string, value:number, project:string }[] | null> {
-        const constraints = await this.prisma.constraint.findMany();
-        return constraints as { name: string, value:number, project:string }[]
-    }
-    // @ts-ignore
-  async getAllGlobal(): Promise<{ name: string, value:number, project:string }[] | null> {
-    const constraints = await this.prisma.constraint.findMany(
-        {
-          where: {
-            project: "ALL",
-          }
-        });
-    // todo Create IConstraint interface
-    return constraints as { name: string, value:number, project:string }[];
-
-  }
-
-  // @ts-ignore
-  async upsert(constraint: { name: string, value: number, project: string }): Promise<{  name: string, value: number, project: string }> {
-    const c = await this.prisma.constraint.upsert({
-      where: { name_project: { name: constraint.name, project: "ALL" } },
-      update: { value: constraint.value},
-      create: { name: constraint.name, value: constraint.value, project: "ALL" }
-    });
-    return c as { name: string, value: number, project: string };
-  }
-
-
-  async create(constraint: { name: string, value: number, project: string }): Promise<{ name: string, value: number, project: string }> {
-    const c = await this.prisma.constraint.create({
-      data: constraint,
-    });
-    return c as { id: number; name: string, value: number, project: string };
-  }
-}
+// export  class SQLLiteConstraintRepository {
+//     constructor() {}
+//
+//     prisma = new PrismaClient({ log: ["query", "error", "warn", "info"] });
+//     async getAll(): Promise<{ name: string, value:number, project:string }[] | null> {
+//         const constraints = await this.prisma.constraint.findMany();
+//         return constraints as { name: string, value:number, project:string }[]
+//     }
+//     // @ts-ignore
+//   async getAllGlobal(): Promise<{ name: string, value:number, project:string }[] | null> {
+//     const constraints = await this.prisma.constraint.findMany(
+//         {
+//           where: {
+//             project: "ALL",
+//           }
+//         });
+//     // todo Create IConstraint interface
+//     return constraints as { name: string, value:number, project:string }[];
+//
+//   }
+//
+//   // @ts-ignore
+//   async upsert(constraint: { name: string, value: number, project: string }): Promise<{  name: string, value: number, project: string }> {
+//     const c = await this.prisma.constraint.upsert({
+//       where: { name_project: { name: constraint.name, project: "ALL" } },
+//       update: { value: constraint.value},
+//       create: { name: constraint.name, value: constraint.value, project: "ALL" }
+//     });
+//     return c as { name: string, value: number, project: string };
+//   }
+//
+//
+//   async create(constraint: { name: string, value: number, project: string }): Promise<{ name: string, value: number, project: string }> {
+//     const c = await this.prisma.constraint.create({
+//       data: constraint,
+//     });
+//     return c as { id: number; name: string, value: number, project: string };
+//   }
+// }
 
 // ----------------- Types Repository -----------------
 

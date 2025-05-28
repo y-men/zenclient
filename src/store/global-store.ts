@@ -27,24 +27,6 @@ interface GlobalStore {
     setCurrentQuarter: (quarter: string) => void;
 }
 
-// const getCurrentQuarter = (): string => {
-//     // Refactored to utility to be used in multiple places, like actions/index.ts
-//     //@ts-ignore
-//     return currentQuarter();
-//     // return currentQuarter()
-//     // const now = new Date();
-//     // const month = now.getMonth();
-//     // const year = now.getFullYear();
-//     // let quarter;
-//     //
-//     // if (month < 3) quarter = 'Q1';
-//     // else if (month < 6) quarter = 'Q2';
-//     // else if (month < 9) quarter = 'Q3';
-//     // else quarter = 'Q4';
-//     //
-//     // return `${quarter}${year}`;
-// };
-
 export const useGlobalStore = create<GlobalStore>((set) => ({
     owners: [],
     sprints: [],
